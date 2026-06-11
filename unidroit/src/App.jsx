@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react"
 
 
-
 function Card({ entry }) {
   return(
     <div
@@ -12,7 +11,7 @@ function Card({ entry }) {
       <p><span className="font-semibold">Promulgating body: </span>{entry.promulgating_body}</p>
       <p><span className="font-semibold">Date: </span>{entry.date}</p>
       <p><span className="font-semibold">Status: </span>{entry.status}</p>
-      <p>❯ <a href={entry.link} target="_blank">View document</a></p>
+      <p> <a href={entry.link} target="_blank">View document</a></p>
       <p><span className="font-semibold">Language: </span>{entry.text_language}</p>
       {entry.jurisdiction === "United States" && <p><span className="font-semibold">US states enacted: </span>{entry.states_usa}</p>}
       <p><span className="font-semibold">UNIDROIT instrument: </span>{entry.principle_title}</p>
@@ -20,7 +19,6 @@ function Card({ entry }) {
       <p><span className="font-semibold">Principle number: </span>{entry['num principle/article']}</p>
       <p><span className="font-semibold">Type: </span>{entry.type}</p>
       <p><span className="font-semibold">Sections: </span>{entry.sections}</p>
-      <p><span className="font-semibold">Strength: </span>{entry.strength}</p>
       <p><span className="font-semibold">Summary: </span>{entry.summary}</p>
       <p><span className="font-semibold">Notes: </span>{entry.notes}</p>
 
@@ -37,7 +35,9 @@ function App() {
   const [instrument, setInstrument] = useState("")
   const [principle, setPrinciple] = useState("")
   const [entries, setEntries] = useState([])
-
+  const [statuses, setStatuses] = useState([])
+  const [languages, setLanguages] = useState([])
+  const [systems, setSystems] = useState([])
  
   
 
@@ -51,6 +51,10 @@ function App() {
   const texts = [...new Set(entries.map(e => e.text_title))].sort()
   const instruments = [...new Set(entries.map(e => e.principle_title))].sort()
   const principles = [...new Set(entries.map(e => e.subtitle))].sort()
+
+  const statusOptions = [...new Set(entries.map(e => e.status))].sort()
+  const langOptions = [...new Set(entries.flatMap(e => (e.text_language || "").split("/").map(l => l.trim())))].filter(l => l !== "").sort()
+  const systemOptions = [...new Set(entries.map(e => e.legal_system))].sort()
 
   const filteredEntries = entries.filter(entry => 
     (jurisdiction === "" || entry.jurisdiction === jurisdiction) &&
@@ -67,8 +71,10 @@ function App() {
     (entry.principle_title && entry.principle_title.toLowerCase().includes(searchText.toLowerCase())) ||
     (entry.subtitle && entry.subtitle.toLowerCase().includes(searchText.toLowerCase())) ||
     (entry.type && entry.type.toLowerCase().includes(searchText.toLowerCase()))
-    )
-
+    ) &&
+    (statuses.length === 0 || statuses.includes(entry.status)) &&
+    (languages.length === 0 || (entry.text_language || "").split("/").some(l => languages.includes(l.trim()))) &&
+    (systems.length === 0 || systems.includes(entry.legal_system))
   )
 
   return (
@@ -132,6 +138,53 @@ function App() {
         </select>
 
         <hr className="mt-5"></hr>
+
+      </div>
+
+      {/* Checkboxes */}
+      <div>
+        {/* STATUS */}
+        <p
+        className="mt-5">Status</p>
+        {statusOptions.map(s => (
+          <label key={s}
+          className="block">
+            <input
+            type="checkbox"
+            checked={statuses.includes(s)}
+            onChange={() => setStatuses(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
+            />
+            {" "}{s}
+          </label>))}
+        
+        {/* LANGUAGE */}
+        <p
+        className="mt-5">Language of text</p>
+        {langOptions.map(s => (
+          <label key={s}
+          className="block">
+            <input
+            type="checkbox"
+            checked={languages.includes(s)}
+            onChange={() => setLanguages(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
+            />
+            {" "}{s}
+          </label>))}
+
+
+        {/* SYSTEM */}
+        <p
+        className="mt-5">Legal system</p>
+        {systemOptions.map(s => (
+          <label key={s}
+          className="block">
+            <input
+            type="checkbox"
+            checked={systems.includes(s)}
+            onChange={() => setSystems(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
+            />
+            {" "}{s}
+          </label>))}
 
       </div>
     
