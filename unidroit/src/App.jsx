@@ -21,8 +21,6 @@ function Card({ entry }) {
       <p><span className="font-semibold">Sections: </span>{entry.sections}</p>
       <p><span className="font-semibold">Summary: </span>{entry.summary}</p>
       <p><span className="font-semibold">Notes: </span>{entry.notes}</p>
-
-
     </div>
   )
 }
@@ -38,7 +36,8 @@ function App() {
   const [statuses, setStatuses] = useState([])
   const [languages, setLanguages] = useState([])
   const [systems, setSystems] = useState([])
- 
+  const [fromYear, setFromYear] = useState("")
+  const [toYear, setToYear] = useState("")
   
 
   useEffect(() => {
@@ -55,6 +54,8 @@ function App() {
   const statusOptions = [...new Set(entries.map(e => e.status))].sort()
   const langOptions = [...new Set(entries.flatMap(e => (e.text_language || "").split("/").map(l => l.trim())))].filter(l => l !== "").sort()
   const systemOptions = [...new Set(entries.map(e => e.legal_system))].sort()
+
+  const getYear = (entry) => Number((entry.date || "").split("/").pop())
 
   const filteredEntries = entries.filter(entry => 
     (jurisdiction === "" || entry.jurisdiction === jurisdiction) &&
@@ -74,7 +75,9 @@ function App() {
     ) &&
     (statuses.length === 0 || statuses.includes(entry.status)) &&
     (languages.length === 0 || (entry.text_language || "").split("/").some(l => languages.includes(l.trim()))) &&
-    (systems.length === 0 || systems.includes(entry.legal_system))
+    (systems.length === 0 || systems.includes(entry.legal_system)) &&
+    (fromYear === "" || getYear(entry) >= Number(fromYear)) &&
+    (toYear === "" || getYear(entry) <= Number(toYear)) 
   )
 
   return (
@@ -100,7 +103,9 @@ function App() {
           className="w-350 border border-gray-500"
         />
       </div>
-    
+
+      
+
       {/* Dropdowns */}
       <div className="ml-3 mt-5 mr-3">
         <p>Select by jurisidiction:</p>
@@ -185,6 +190,26 @@ function App() {
             />
             {" "}{s}
           </label>))}
+        
+        {/* Date sliding bar */}
+        <p
+        className="mt-5">Date of implementation</p>
+        <div >
+          <input
+            type="number"
+            placeholder="From year"
+            value={fromYear}
+            onChange={(e) => setFromYear(e.target.value)}
+            className="w-350 border border-gray-500"
+          />
+          <input
+            type="number"
+            placeholder="To year"
+            value={toYear}
+            onChange={(e) => setToYear(e.target.value)}
+            className="w-350 border border-gray-500"
+          />
+        </div>  
 
       </div>
     
