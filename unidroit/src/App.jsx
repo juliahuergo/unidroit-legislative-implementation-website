@@ -38,6 +38,7 @@ function App() {
   const [systems, setSystems] = useState([])
   const [fromYear, setFromYear] = useState("")
   const [toYear, setToYear] = useState("")
+  const [sortOrder, setSortOrder] = useState("")
   
 
   useEffect(() => {
@@ -56,6 +57,13 @@ function App() {
   const systemOptions = [...new Set(entries.map(e => e.legal_system))].sort()
 
   const getYear = (entry) => Number((entry.date || "").split("/").pop())
+  const getDateValue = (entry) => {
+    const parts = (entry.date || "").split("/")
+    const year = Number(parts[parts.length - 1]) || 0
+    const month = Number(parts[parts.length - 2]) || 0
+    const day = Number(parts[parts.length - 3]) || 0
+    return year * 10000 + month * 100 + day
+  }
 
   const filteredEntries = entries.filter(entry => 
     (jurisdiction === "" || entry.jurisdiction === jurisdiction) &&
@@ -79,6 +87,8 @@ function App() {
     (fromYear === "" || getYear(entry) >= Number(fromYear)) &&
     (toYear === "" || getYear(entry) <= Number(toYear)) 
   )
+
+  const sortedEntries = sortOrder === "" ? filteredEntries : [...filteredEntries].sort((a, b) => sortOrder === "asc" ? getDateValue(a) - getDateValue(b) : getDateValue(b) - getDateValue(a))
 
   return (
     <div>
@@ -216,8 +226,17 @@ function App() {
     {/* Results */}
     <div className="mt-8">
       <h2 className="mr-3 bg-amber-200">Here are the results:</h2>
-      {filteredEntries.map(entry => <Card entry={entry} key={entry.id}/>)}
+      <label className="block mt-2">
+        Sort by date:{" "}
+        <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+          <option value="">No sorting</option>
+          <option value="asc">Oldest first</option>
+          <option value="desc">Newest first</option>
+        </select>
+      </label>
 
+    {sortedEntries.map(entry => <Card entry={entry} key={entry.id}/>)}
+ 
     </div>
 
 
