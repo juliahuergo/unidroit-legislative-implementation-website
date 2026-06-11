@@ -53,7 +53,19 @@ function App() {
   const filteredEntries = entries.filter(entry => 
     (jurisdiction === "" || entry.jurisdiction === jurisdiction) &&
     (text === "" || entry.text_title === text) &&
-    (principle === "" || entry.subtitle === principle)
+    (principle === "" || entry.subtitle === principle) &&
+    (
+    (entry.jurisdiction && entry.jurisdiction.toLowerCase().includes(searchText.toLowerCase())) ||
+    (entry.summary && entry.summary.toLowerCase().includes(searchText.toLowerCase())) ||
+    (entry.notes && entry.notes.toLowerCase().includes(searchText.toLowerCase())) ||
+    (entry.text_title && entry.text_title.toLowerCase().includes(searchText.toLowerCase())) ||
+    (entry.legal_system && entry.legal_system.toLowerCase().includes(searchText.toLowerCase())) ||
+    (entry.promulgating_body && entry.promulgating_body.toLowerCase().includes(searchText.toLowerCase())) ||
+    (entry.principle_title && entry.principle_title.toLowerCase().includes(searchText.toLowerCase())) ||
+    (entry.subtitle && entry.subtitle.toLowerCase().includes(searchText.toLowerCase())) ||
+    (entry.type && entry.type.toLowerCase().includes(searchText.toLowerCase()))
+    )
+
   )
 
   return (
@@ -111,9 +123,9 @@ function App() {
         <hr className="mt-5"></hr>
 
       </div>
-
+    
+    {/* Results */}
     <div className="mt-8">
-      {/* Results */}
       <h2 className="mr-3 bg-amber-200">Here are the results:</h2>
       {filteredEntries.map(entry => <Card entry={entry} key={entry.id}/>)}
 
