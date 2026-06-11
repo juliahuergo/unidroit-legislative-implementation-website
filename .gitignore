@@ -1,0 +1,21 @@
+# Dependencias y entornos — se regeneran con npm install / pip install
+node_modules/
+.venv/
+
+# Builds y logs generados
+dist/
+*.log
+
+# Config local y secretos
+.env
+.claude/
+CLAUDE.md
+
+# Notas personales de trabajo
+plan.txt
+pruebas_dataset.ipynb
+
+# Sistema / editor
+.DS_Store
+.vscode/*
+!.vscode/extensions.json
