@@ -36,12 +36,17 @@ function App() {
   const [text, setText] = useState("")
   const [principle, setPrinciple] = useState("")
   const [entries, setEntries] = useState([])
+  
 
   useEffect(() => {
     fetch("/result.json")
       .then(res => res.json())
       .then(data => setEntries(data))
   }, [])
+
+  const jurisdictions = [...new Set(entries.map(e => e.jurisdiction))].sort()
+  const texts = [...new Set(entries.map(e => e.text_title))].sort()
+  const principles = [...new Set(entries.map(e => e.subtitle))].sort()
 
   return (
     <div>
@@ -73,11 +78,7 @@ function App() {
       <select value={jurisdiction}
               onChange={(e) => setJurisdiction(e.target.value)}>
         <option value="" disabled>Select a jurisdiction...</option>
-        <option value="United States">United States</option>
-        <option value="Dubai">Dubai</option>
-        <option value="Italy">Italy</option>
-        <option value="Scotland">Scotland</option>
-        <option value="Ukraine">Ukraine</option>
+        {jurisdictions.map(j => <option key={j} value={j}>{j}</option>)}
       </select>
 
       <hr className="mt-5"></hr>
@@ -86,11 +87,7 @@ function App() {
       <select value={text}
               onChange={(e) => setText(e.target.value)}>
         <option value="" disabled>Select a legislative text...</option>
-        <option value="Amendments to the Uniform Commercial Code (UCC)">Amendments to the Uniform Commercial Code (UCC)</option>
-        <option value="Digital Assets Law (DAL) — DIFC Law No. 2 of 2024">Digital Assets Law (DAL) — DIFC Law No. 2 of 2024</option>
-        <option value="Decree-Law No. 25 of 17 March 2023 with Conversion Law No. 52 of 10 May 2023">Decree-Law No. 25 of 17 March 2023 with Conversion Law No. 52 of 10 May 2023</option>
-        <option value="Digital Assets (Scotland) Act">Digital Assets (Scotland) Act</option>
-        <option value='Law of Ukraine No. 4466-IX "On Factoring"'>Law of Ukraine No. 4466-IX "On Factoring"</option>
+        {texts.map(t => <option key={t} value={t}>{t}</option>)}
       </select>
 
       <hr className="mt-5"></hr>
@@ -99,11 +96,8 @@ function App() {
       <select value={principle}
               onChange={(e) => setPrinciple(e.target.value)}>
         <option value="" disabled>Select an instrument...</option>
-        <option value="General Principles">General Principles</option>
-        <option value="Control">Control</option>
-        <option value="Identification of a person in control of a digital asset">Identification of a person in control of a digital asset</option>
-        <option value="Innocent aquisition">Innocent aquisition</option>
-        <option value="Requirements for the transfer of a receivable">Requirements for the transfer of a receivable</option>
+        {principles.map(p => <option key={p} value={p}>{p}</option>)}
+
       </select>
 
       <hr className="mt-5"></hr>
