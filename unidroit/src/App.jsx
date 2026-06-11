@@ -34,6 +34,7 @@ function App() {
   const [searchText, setSearchText] = useState("")
   const [jurisdiction, setJurisdiction] = useState("")
   const [text, setText] = useState("")
+  const [instrument, setInstrument] = useState("")
   const [principle, setPrinciple] = useState("")
   const [entries, setEntries] = useState([])
 
@@ -48,11 +49,13 @@ function App() {
 
   const jurisdictions = [...new Set(entries.map(e => e.jurisdiction))].sort()
   const texts = [...new Set(entries.map(e => e.text_title))].sort()
+  const instruments = [...new Set(entries.map(e => e.principle_title))].sort()
   const principles = [...new Set(entries.map(e => e.subtitle))].sort()
 
   const filteredEntries = entries.filter(entry => 
     (jurisdiction === "" || entry.jurisdiction === jurisdiction) &&
     (text === "" || entry.text_title === text) &&
+    (instrument === "" || entry.principle_title === instrument) &&
     (principle === "" || entry.subtitle === principle) &&
     (
     (entry.jurisdiction && entry.jurisdiction.toLowerCase().includes(searchText.toLowerCase())) ||
@@ -113,9 +116,17 @@ function App() {
         <hr className="mt-5"></hr>
 
         <p className="mt-5">Select by Unidroit instrument</p>
+        <select value={instrument}
+                onChange={(e) => setInstrument(e.target.value)}>
+          <option value="">All UNIDROIT instruments</option>
+          {instruments.map(i => <option key={i} value={i}>{i}</option>)}
+        </select>
+
+       
+
         <select value={principle}
                 onChange={(e) => setPrinciple(e.target.value)}>
-          <option value="">All UNIDROIT instruments</option>
+          <option value="">And a specific one:</option>
           {principles.map(p => <option key={p} value={p}>{p}</option>)}
 
         </select>
