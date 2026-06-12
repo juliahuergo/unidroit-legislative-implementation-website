@@ -132,9 +132,14 @@ function App() {
     <div className="min-h-screen bg-gray-50">
 
       {/* Header */}
-      <div className="bg-blue-900 text-white px-8 py-7">
-        <h1 className="text-3xl font-bold tracking-tight">UNIDROIT Implementation Database</h1>
-        <p className="text-blue-200 mt-1 text-sm">Legislative implementation of UNIDROIT soft-law instruments worldwide</p>
+      <div className="bg-blue-900 text-white px-8 py-7 flex items-center gap-6">
+        <a href="https://www.unidroit.org" target="_blank" rel="noopener noreferrer" className="bg-white rounded-lg px-4 py-3 shrink-0">
+          <img src="/unidroit_logo.png" alt="UNIDROIT — International Institute for the Unification of Private Law" className="h-12 w-auto" />
+        </a>
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight">UNIDROIT Implementation Database</h1>
+          <p className="text-blue-200 mt-1 text-sm">Legislative implementation of UNIDROIT soft-law instruments worldwide</p>
+        </div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 pb-16">
