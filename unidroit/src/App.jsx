@@ -77,6 +77,7 @@ function App() {
   const [fromYear, setFromYear] = useState("")
   const [toYear, setToYear] = useState("")
   const [sortOrder, setSortOrder] = useState("")
+  const [activeTab, setActiveTab] = useState("results")
 
 
   useEffect(() => {
@@ -127,6 +128,16 @@ function App() {
   )
 
   const sortedEntries = sortOrder === "" ? filteredEntries : [...filteredEntries].sort((a, b) => sortOrder === "asc" ? getDateValue(a) - getDateValue(b) : getDateValue(b) - getDateValue(a))
+
+  // Counts per principle over the *filtered* entries, so charts follow the filters
+  const principleCounts = Object.entries(
+    filteredEntries.reduce((acc, e) => {
+      const key = e.subtitle || "Unspecified"
+      acc[key] = (acc[key] || 0) + 1
+      return acc
+    }, {})
+  ).sort((a, b) => b[1] - a[1])
+  const maxPrincipleCount = principleCounts.length > 0 ? principleCounts[0][1] : 1
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -271,6 +282,25 @@ function App() {
 
           <main className="flex-1">
 
+            {/* Tabs */}
+            <div className="mb-4 flex gap-6 border-b border-gray-200">
+              {[["results", "Results"], ["visualizations", "Visualizations"]].map(([id, label]) => (
+                <button
+                  key={id}
+                  onClick={() => setActiveTab(id)}
+                  className={`pb-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
+                    activeTab === id
+                      ? "border-unidroit text-unidroit"
+                      : "border-transparent text-gray-500 hover:text-gray-700"
+                  }`}>
+                  {label}
+                </button>
+              ))}
+            </div>
+
+            {activeTab === "results" && (
+            <>
+
             {/* Results */}
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-gray-900">
@@ -295,6 +325,37 @@ function App() {
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 {sortedEntries.map(entry => <Card entry={entry} key={entry.id} />)}
               </div>
+            )}
+
+            </>
+            )}
+
+            {activeTab === "visualizations" && (
+              <>
+              <h2 className="text-lg font-semibold text-gray-900">
+                Visualizations <span className="font-normal text-gray-400">({sortedEntries.length} entries)</span>
+              </h2>
+              <p className="mt-1 text-sm text-gray-500">Charts reflect the current search and filters.</p>
+
+              {sortedEntries.length === 0 ? (
+                <p className="mt-12 text-center text-gray-500">No data matches your search and filters.</p>
+              ) : (
+                <div className="mt-4 rounded-xl border border-gray-200 bg-white p-5">
+                  <h3 className="text-sm font-semibold text-gray-900">Implementations per principle</h3>
+                  <div className="mt-4 space-y-2">
+                    {principleCounts.map(([label, count]) => (
+                      <div key={label} className="flex items-center gap-3">
+                        <span className="w-56 shrink-0 truncate text-sm text-gray-700" title={label}>{label}</span>
+                        <div className="flex-1">
+                          <div className="h-5 rounded bg-unidroit" style={{ width: `${(count / maxPrincipleCount) * 100}%` }}></div>
+                        </div>
+                        <span className="w-8 text-right text-sm text-gray-500">{count}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+              </>
             )}
 
           </main>
