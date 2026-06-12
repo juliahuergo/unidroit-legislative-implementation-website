@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react"
 
 // Shared looks for form controls and sidebar section labels
-const control = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-800/30 focus:border-blue-800"
+const control = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-unidroit/30 focus:border-unidroit"
 const sectionLabel = "block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1.5"
 
 
@@ -35,8 +35,8 @@ function Card({ entry }) {
         {entry.text_language && ` · ${entry.text_language}`}
       </p>
 
-      <div className="mt-3 rounded-lg bg-blue-50 border border-blue-100 p-3">
-        <p className="text-xs font-semibold uppercase tracking-wide text-blue-900">UNIDROIT instrument</p>
+      <div className="mt-3 rounded-lg bg-unidroit-50 border border-unidroit-100 p-3">
+        <p className="text-xs font-semibold uppercase tracking-wide text-unidroit">UNIDROIT instrument</p>
         <p className="mt-1 text-sm font-medium text-gray-800">{entry.principle_title}</p>
         <p className="text-sm text-gray-600">
           {entry.subtitle}
@@ -54,7 +54,7 @@ function Card({ entry }) {
 
       {entry.link && (
         <a href={entry.link} target="_blank" rel="noreferrer"
-           className="mt-4 inline-block text-sm font-medium text-blue-900 hover:text-blue-700 hover:underline">
+           className="mt-4 inline-block text-sm font-medium text-unidroit hover:text-unidroit-700 hover:underline">
           View document →
         </a>
       )}
@@ -132,13 +132,13 @@ function App() {
     <div className="min-h-screen bg-gray-50">
 
       {/* Header */}
-      <div className="bg-blue-900 text-white px-8 py-7 flex items-center gap-6">
-        <a href="https://www.unidroit.org" target="_blank" rel="noopener noreferrer" className="bg-white rounded-lg px-4 py-3 shrink-0">
-          <img src="/unidroit_logo.png" alt="UNIDROIT — International Institute for the Unification of Private Law" className="h-12 w-auto" />
+      <div className="bg-white border-b-4 border-unidroit px-8 py-5 flex items-center gap-6">
+        <a href="https://www.unidroit.org" target="_blank" rel="noopener noreferrer" className="shrink-0">
+          <img src="/unidroit_logo.png" alt="UNIDROIT — International Institute for the Unification of Private Law" className="h-14 w-auto" />
         </a>
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">UNIDROIT Implementation Database</h1>
-          <p className="text-blue-200 mt-1 text-sm">Legislative implementation of UNIDROIT soft-law instruments worldwide</p>
+        <div className="border-l border-gray-300 pl-6">
+          <h1 className="text-3xl font-bold tracking-tight text-unidroit">Implementation Database</h1>
+          <p className="text-gray-500 mt-1 text-sm">Legislative implementation of UNIDROIT soft-law instruments worldwide</p>
         </div>
       </div>
 
@@ -151,7 +151,7 @@ function App() {
             placeholder="Search by jurisdiction, legislative text, UNIDROIT principle..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-800/30 focus:border-blue-800"
+            className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-unidroit/30 focus:border-unidroit"
           />
         </div>
 
@@ -205,7 +205,7 @@ function App() {
                     <label key={s} className="flex items-center gap-2 text-sm text-gray-700">
                       <input
                         type="checkbox"
-                        className="accent-blue-900"
+                        className="accent-unidroit"
                         checked={statuses.includes(s)}
                         onChange={() => setStatuses(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
                       />
@@ -221,7 +221,7 @@ function App() {
                     <label key={s} className="flex items-center gap-2 text-sm text-gray-700">
                       <input
                         type="checkbox"
-                        className="accent-blue-900"
+                        className="accent-unidroit"
                         checked={languages.includes(s)}
                         onChange={() => setLanguages(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
                       />
@@ -237,7 +237,7 @@ function App() {
                     <label key={s} className="flex items-center gap-2 text-sm text-gray-700">
                       <input
                         type="checkbox"
-                        className="accent-blue-900"
+                        className="accent-unidroit"
                         checked={systems.includes(s)}
                         onChange={() => setSystems(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
                       />
@@ -279,7 +279,7 @@ function App() {
               <label className="flex items-center gap-2 text-sm text-gray-600">
                 Sort by date
                 <select
-                  className="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-800/30"
+                  className="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-unidroit/30"
                   value={sortOrder}
                   onChange={(e) => setSortOrder(e.target.value)}>
                   <option value="">No sorting</option>
