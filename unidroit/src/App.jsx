@@ -1,25 +1,64 @@
 import { useState, useEffect } from "react"
 
+// Shared looks for form controls and sidebar section labels
+const control = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-800/30 focus:border-blue-800"
+const sectionLabel = "block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1.5"
+
+
+function Detail({ label, value }) {
+  if (!value) return null
+  return (
+    <p className="text-sm text-gray-700">
+      <span className="font-medium text-gray-900">{label}: </span>{value}
+    </p>
+  )
+}
+
 
 function Card({ entry }) {
   return (
-    <div className="bg-blue-50 rounded-lg shadow p-6 mb-4">
-      <p><span className="font-semibold">Title: </span>{entry.text_title}</p>
-      <p><span className="font-semibold">Jurisdiction: </span>{entry.jurisdiction}</p>
-      <p><span className="font-semibold">Legal system: </span>{entry.legal_system}</p>
-      <p><span className="font-semibold">Promulgating body: </span>{entry.promulgating_body}</p>
-      <p><span className="font-semibold">Date: </span>{entry.date}</p>
-      <p><span className="font-semibold">Status: </span>{entry.status}</p>
-      <p> <a href={entry.link} target="_blank">View document</a></p>
-      <p><span className="font-semibold">Language: </span>{entry.text_language}</p>
-      {entry.jurisdiction === "United States" && <p><span className="font-semibold">US states enacted: </span>{entry.states_usa}</p>}
-      <p><span className="font-semibold">UNIDROIT instrument: </span>{entry.principle_title}</p>
-      <p><span className="font-semibold">Subtitle: </span>{entry.subtitle}</p>
-      <p><span className="font-semibold">Principle number: </span>{entry['num principle/article']}</p>
-      <p><span className="font-semibold">Type: </span>{entry.type}</p>
-      <p><span className="font-semibold">Sections: </span>{entry.sections}</p>
-      <p><span className="font-semibold">Summary: </span>{entry.summary}</p>
-      <p><span className="font-semibold">Notes: </span>{entry.notes}</p>
+    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-shadow">
+
+      <div className="flex items-start justify-between gap-3">
+        <h3 className="text-lg font-semibold text-gray-900 leading-snug">{entry.text_title}</h3>
+        {entry.status && (
+          <span className="shrink-0 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 px-2.5 py-0.5 text-xs font-medium">
+            {entry.status}
+          </span>
+        )}
+      </div>
+
+      <p className="mt-1 text-sm text-gray-500">
+        {entry.jurisdiction}
+        {entry.date && ` · ${entry.date}`}
+        {entry.legal_system && ` · ${entry.legal_system}`}
+        {entry.text_language && ` · ${entry.text_language}`}
+      </p>
+
+      <div className="mt-3 rounded-lg bg-blue-50 border border-blue-100 p-3">
+        <p className="text-xs font-semibold uppercase tracking-wide text-blue-900">UNIDROIT instrument</p>
+        <p className="mt-1 text-sm font-medium text-gray-800">{entry.principle_title}</p>
+        <p className="text-sm text-gray-600">
+          {entry.subtitle}
+          {entry['num principle/article'] && ` (${entry.type || "Principle"} ${entry['num principle/article']})`}
+        </p>
+      </div>
+
+      <div className="mt-3 space-y-1">
+        <Detail label="Promulgating body" value={entry.promulgating_body} />
+        {entry.jurisdiction === "United States" && <Detail label="US states enacted" value={entry.states_usa} />}
+        <Detail label="Sections" value={entry.sections} />
+        <Detail label="Summary" value={entry.summary} />
+        <Detail label="Notes" value={entry.notes} />
+      </div>
+
+      {entry.link && (
+        <a href={entry.link} target="_blank" rel="noreferrer"
+           className="mt-4 inline-block text-sm font-medium text-blue-900 hover:text-blue-700 hover:underline">
+          View document →
+        </a>
+      )}
+
     </div>
   )
 }
@@ -93,144 +132,165 @@ function App() {
     <div className="min-h-screen bg-gray-50">
 
       {/* Header */}
-      <div className="bg-blue-900 text-white px-8 py-6">
-        <h1 className="text-3xl font-bold">Unidroit Implementation Database</h1>
+      <div className="bg-blue-900 text-white px-8 py-7">
+        <h1 className="text-3xl font-bold tracking-tight">UNIDROIT Implementation Database</h1>
         <p className="text-blue-200 mt-1 text-sm">Legislative implementation of UNIDROIT soft-law instruments worldwide</p>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4">
+      <div className="max-w-7xl mx-auto px-4 pb-16">
 
         {/* Search bar */}
-        <div className="max-w-2xl mt-6 mx-auto">
+        <div className="max-w-2xl mt-8 mx-auto">
           <input
             type="text"
-            placeholder="Search by jurisdiction, legislative text, Unidroit principle..."
+            placeholder="Search by jurisdiction, legislative text, UNIDROIT principle..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            className="w-full border border-gray-500"
+            className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-800/30 focus:border-blue-800"
           />
         </div>
 
-        <div className="flex gap-8 mt-6">
+        <div className="flex gap-8 mt-8">
 
           <aside className="w-64 shrink-0">
+            <div className="rounded-xl border border-gray-200 bg-white p-4 space-y-5">
 
-            {/* Dropdowns */}
-            <div>
-              <p>Select by jurisidiction:</p>
-              <select className="w-full"
-                      value={jurisdiction}
-                      onChange={(e) => setJurisdiction(e.target.value)}>
-                <option value="">All jurisdictions</option>
-                {jurisdictions.map(j => <option key={j} value={j}>{j}</option>)}
-              </select>
+              <h2 className="text-sm font-semibold text-gray-900">Filters</h2>
 
-              <hr className="mt-5"></hr>
-
-              <p className="mt-5">Select by legislative text</p>
-              <select className="w-full"
-                      value={text}
-                      onChange={(e) => setText(e.target.value)}>
-                <option value="">All legislative texts</option>
-                {texts.map(t => <option key={t} value={t}>{t}</option>)}
-              </select>
-
-              <hr className="mt-5"></hr>
-
-              <p className="mt-5">Select by Unidroit instrument</p>
-              <select className="w-full"
-                      value={instrument}
-                      onChange={(e) => setInstrument(e.target.value)}>
-                <option value="">All UNIDROIT instruments</option>
-                {instruments.map(i => <option key={i} value={i}>{i}</option>)}
-              </select>
-
-              <select className="w-full"
-                      value={principle}
-                      onChange={(e) => setPrinciple(e.target.value)}>
-                <option value="">And a specific one:</option>
-                {principles.map(p => <option key={p} value={p}>{p}</option>)}
-              </select>
-
-              <hr className="mt-5"></hr>
-            </div>
-
-            {/* Checkboxes */}
-            <div>
-              {/* STATUS */}
-              <p className="mt-5">Status</p>
-              {statusOptions.map(s => (
-                <label key={s} className="block">
-                  <input
-                    type="checkbox"
-                    checked={statuses.includes(s)}
-                    onChange={() => setStatuses(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
-                  />
-                  {" "}{s}
-                </label>))}
-
-              {/* LANGUAGE */}
-              <p className="mt-5">Language of text</p>
-              {langOptions.map(s => (
-                <label key={s} className="block">
-                  <input
-                    type="checkbox"
-                    checked={languages.includes(s)}
-                    onChange={() => setLanguages(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
-                  />
-                  {" "}{s}
-                </label>))}
-
-              {/* SYSTEM */}
-              <p className="mt-5">Legal system</p>
-              {systemOptions.map(s => (
-                <label key={s} className="block">
-                  <input
-                    type="checkbox"
-                    checked={systems.includes(s)}
-                    onChange={() => setSystems(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
-                  />
-                  {" "}{s}
-                </label>))}
-
-              {/* Date range */}
-              <p className="mt-5">Date of implementation</p>
               <div>
-                <input
-                  type="number"
-                  placeholder="From year"
-                  value={fromYear}
-                  onChange={(e) => setFromYear(e.target.value)}
-                  className="w-full border border-gray-500"
-                />
-                <input
-                  type="number"
-                  placeholder="To year"
-                  value={toYear}
-                  onChange={(e) => setToYear(e.target.value)}
-                  className="w-full border border-gray-500"
-                />
+                <label className={sectionLabel}>Jurisdiction</label>
+                <select className={control}
+                        value={jurisdiction}
+                        onChange={(e) => setJurisdiction(e.target.value)}>
+                  <option value="">All jurisdictions</option>
+                  {jurisdictions.map(j => <option key={j} value={j}>{j}</option>)}
+                </select>
               </div>
-            </div>
 
+              <div>
+                <label className={sectionLabel}>Legislative text</label>
+                <select className={control}
+                        value={text}
+                        onChange={(e) => setText(e.target.value)}>
+                  <option value="">All legislative texts</option>
+                  {texts.map(t => <option key={t} value={t}>{t}</option>)}
+                </select>
+              </div>
+
+              <div>
+                <label className={sectionLabel}>UNIDROIT instrument</label>
+                <select className={control}
+                        value={instrument}
+                        onChange={(e) => setInstrument(e.target.value)}>
+                  <option value="">All UNIDROIT instruments</option>
+                  {instruments.map(i => <option key={i} value={i}>{i}</option>)}
+                </select>
+                <select className={`${control} mt-2`}
+                        value={principle}
+                        onChange={(e) => setPrinciple(e.target.value)}>
+                  <option value="">All principles</option>
+                  {principles.map(p => <option key={p} value={p}>{p}</option>)}
+                </select>
+              </div>
+
+              <div>
+                <label className={sectionLabel}>Status</label>
+                <div className="space-y-1">
+                  {statusOptions.map(s => (
+                    <label key={s} className="flex items-center gap-2 text-sm text-gray-700">
+                      <input
+                        type="checkbox"
+                        className="accent-blue-900"
+                        checked={statuses.includes(s)}
+                        onChange={() => setStatuses(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
+                      />
+                      {s}
+                    </label>))}
+                </div>
+              </div>
+
+              <div>
+                <label className={sectionLabel}>Language of text</label>
+                <div className="space-y-1">
+                  {langOptions.map(s => (
+                    <label key={s} className="flex items-center gap-2 text-sm text-gray-700">
+                      <input
+                        type="checkbox"
+                        className="accent-blue-900"
+                        checked={languages.includes(s)}
+                        onChange={() => setLanguages(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
+                      />
+                      {s}
+                    </label>))}
+                </div>
+              </div>
+
+              <div>
+                <label className={sectionLabel}>Legal system</label>
+                <div className="space-y-1">
+                  {systemOptions.map(s => (
+                    <label key={s} className="flex items-center gap-2 text-sm text-gray-700">
+                      <input
+                        type="checkbox"
+                        className="accent-blue-900"
+                        checked={systems.includes(s)}
+                        onChange={() => setSystems(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
+                      />
+                      {s}
+                    </label>))}
+                </div>
+              </div>
+
+              <div>
+                <label className={sectionLabel}>Date of implementation</label>
+                <div className="flex gap-2">
+                  <input
+                    type="number"
+                    placeholder="From"
+                    value={fromYear}
+                    onChange={(e) => setFromYear(e.target.value)}
+                    className={control}
+                  />
+                  <input
+                    type="number"
+                    placeholder="To"
+                    value={toYear}
+                    onChange={(e) => setToYear(e.target.value)}
+                    className={control}
+                  />
+                </div>
+              </div>
+
+            </div>
           </aside>
 
           <main className="flex-1">
 
             {/* Results */}
-            <div className="mt-8">
-              <h2 className="mr-3 bg-amber-200">Here are the results:</h2>
-              <label className="block mt-2">
-                Sort by date:{" "}
-                <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+            <div className="flex items-center justify-between">
+              <h2 className="text-lg font-semibold text-gray-900">
+                Results <span className="font-normal text-gray-400">({sortedEntries.length})</span>
+              </h2>
+              <label className="flex items-center gap-2 text-sm text-gray-600">
+                Sort by date
+                <select
+                  className="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-800/30"
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value)}>
                   <option value="">No sorting</option>
                   <option value="asc">Oldest first</option>
                   <option value="desc">Newest first</option>
                 </select>
               </label>
-
-              {sortedEntries.map(entry => <Card entry={entry} key={entry.id} />)}
             </div>
+
+            {sortedEntries.length === 0 ? (
+              <p className="mt-12 text-center text-gray-500">No results match your search and filters.</p>
+            ) : (
+              <div className="mt-4 grid gap-4 md:grid-cols-2">
+                {sortedEntries.map(entry => <Card entry={entry} key={entry.id} />)}
+              </div>
+            )}
 
           </main>
 
