@@ -6,3 +6,7 @@
 
 
 Current domain: https://unidroit-implementation.vercel.app/ 
+
+
+How the deployment works:
+
