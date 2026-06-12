@@ -80,7 +80,7 @@ function App() {
 
 
   useEffect(() => {
-    fetch("/result.json")
+    fetch(import.meta.env.BASE_URL + "result.json")
       .then(res => res.json())
       .then(data => setEntries(data))
   }, [])

@@ -1,0 +1,35 @@
+# Re-reads the Google Sheet daily and commits a fresh result.json if the data
+# changed. That commit then triggers both deployments (Vercel + Pages), so
+# librarians only ever touch the spreadsheet.
+name: Refresh data from Google Sheet
+
+on:
+  schedule:
+    - cron: "0 5 * * *"   # daily at 05:00 UTC (07:00 in Rome, summer)
+  workflow_dispatch:       # allows manual runs from the Actions tab
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install pandas
+        run: pip install pandas
+
+      - name: Regenerate result.json from the Google Sheet
+        run: python unidroit/src/load_datasets.py
+
+      - name: Commit and push if the data changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add unidroit/public/result.json
+          git diff --cached --quiet || (git commit -m "Auto-refresh data from Google Sheet" && git push)
