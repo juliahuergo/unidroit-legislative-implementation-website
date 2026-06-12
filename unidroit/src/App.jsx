@@ -2,9 +2,8 @@ import { useState, useEffect } from "react"
 
 
 function Card({ entry }) {
-  return(
-    <div
-    className="bg-blue-50 rounded-lg shadow p-6 mb-4">
+  return (
+    <div className="bg-blue-50 rounded-lg shadow p-6 mb-4">
       <p><span className="font-semibold">Title: </span>{entry.text_title}</p>
       <p><span className="font-semibold">Jurisdiction: </span>{entry.jurisdiction}</p>
       <p><span className="font-semibold">Legal system: </span>{entry.legal_system}</p>
@@ -39,7 +38,7 @@ function App() {
   const [fromYear, setFromYear] = useState("")
   const [toYear, setToYear] = useState("")
   const [sortOrder, setSortOrder] = useState("")
-  
+
 
   useEffect(() => {
     fetch("/result.json")
@@ -65,190 +64,179 @@ function App() {
     return year * 10000 + month * 100 + day
   }
 
-  const filteredEntries = entries.filter(entry => 
+  const filteredEntries = entries.filter(entry =>
     (jurisdiction === "" || entry.jurisdiction === jurisdiction) &&
     (text === "" || entry.text_title === text) &&
     (instrument === "" || entry.principle_title === instrument) &&
     (principle === "" || entry.subtitle === principle) &&
     (
-    (entry.jurisdiction && entry.jurisdiction.toLowerCase().includes(searchText.toLowerCase())) ||
-    (entry.summary && entry.summary.toLowerCase().includes(searchText.toLowerCase())) ||
-    (entry.notes && entry.notes.toLowerCase().includes(searchText.toLowerCase())) ||
-    (entry.text_title && entry.text_title.toLowerCase().includes(searchText.toLowerCase())) ||
-    (entry.legal_system && entry.legal_system.toLowerCase().includes(searchText.toLowerCase())) ||
-    (entry.promulgating_body && entry.promulgating_body.toLowerCase().includes(searchText.toLowerCase())) ||
-    (entry.principle_title && entry.principle_title.toLowerCase().includes(searchText.toLowerCase())) ||
-    (entry.subtitle && entry.subtitle.toLowerCase().includes(searchText.toLowerCase())) ||
-    (entry.type && entry.type.toLowerCase().includes(searchText.toLowerCase()))
+      (entry.jurisdiction && entry.jurisdiction.toLowerCase().includes(searchText.toLowerCase())) ||
+      (entry.summary && entry.summary.toLowerCase().includes(searchText.toLowerCase())) ||
+      (entry.notes && entry.notes.toLowerCase().includes(searchText.toLowerCase())) ||
+      (entry.text_title && entry.text_title.toLowerCase().includes(searchText.toLowerCase())) ||
+      (entry.legal_system && entry.legal_system.toLowerCase().includes(searchText.toLowerCase())) ||
+      (entry.promulgating_body && entry.promulgating_body.toLowerCase().includes(searchText.toLowerCase())) ||
+      (entry.principle_title && entry.principle_title.toLowerCase().includes(searchText.toLowerCase())) ||
+      (entry.subtitle && entry.subtitle.toLowerCase().includes(searchText.toLowerCase())) ||
+      (entry.type && entry.type.toLowerCase().includes(searchText.toLowerCase()))
     ) &&
     (statuses.length === 0 || statuses.includes(entry.status)) &&
     (languages.length === 0 || (entry.text_language || "").split("/").some(l => languages.includes(l.trim()))) &&
     (systems.length === 0 || systems.includes(entry.legal_system)) &&
     (fromYear === "" || getYear(entry) >= Number(fromYear)) &&
-    (toYear === "" || getYear(entry) <= Number(toYear)) 
+    (toYear === "" || getYear(entry) <= Number(toYear))
   )
 
   const sortedEntries = sortOrder === "" ? filteredEntries : [...filteredEntries].sort((a, b) => sortOrder === "asc" ? getDateValue(a) - getDateValue(b) : getDateValue(b) - getDateValue(a))
 
   return (
-    <div>
+    <div className="min-h-screen bg-gray-50">
 
       {/* Header */}
-      <div>
-        <div className="bg-blue-900 text-white px-8 py-6">
-          <h1 className="text-3xl font-bold">Unidroit Implementation Database</h1>
-          <p className="text-blue-200 mt-1 text-sm">Legislative implementation of UNIDROIT soft-law instruments worldwide
-          </p>
+      <div className="bg-blue-900 text-white px-8 py-6">
+        <h1 className="text-3xl font-bold">Unidroit Implementation Database</h1>
+        <p className="text-blue-200 mt-1 text-sm">Legislative implementation of UNIDROIT soft-law instruments worldwide</p>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4">
+
+        {/* Search bar */}
+        <div className="max-w-2xl mt-6 mx-auto">
+          <input
+            type="text"
+            placeholder="Search by jurisdiction, legislative text, Unidroit principle..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            className="w-full border border-gray-500"
+          />
         </div>
-      
+
+        <div className="flex gap-8 mt-6">
+
+          <aside className="w-64 shrink-0">
+
+            {/* Dropdowns */}
+            <div>
+              <p>Select by jurisidiction:</p>
+              <select value={jurisdiction}
+                      onChange={(e) => setJurisdiction(e.target.value)}>
+                <option value="">All jurisdictions</option>
+                {jurisdictions.map(j => <option key={j} value={j}>{j}</option>)}
+              </select>
+
+              <hr className="mt-5"></hr>
+
+              <p className="mt-5">Select by legislative text</p>
+              <select value={text}
+                      onChange={(e) => setText(e.target.value)}>
+                <option value="">All legislative texts</option>
+                {texts.map(t => <option key={t} value={t}>{t}</option>)}
+              </select>
+
+              <hr className="mt-5"></hr>
+
+              <p className="mt-5">Select by Unidroit instrument</p>
+              <select value={instrument}
+                      onChange={(e) => setInstrument(e.target.value)}>
+                <option value="">All UNIDROIT instruments</option>
+                {instruments.map(i => <option key={i} value={i}>{i}</option>)}
+              </select>
+
+              <select value={principle}
+                      onChange={(e) => setPrinciple(e.target.value)}>
+                <option value="">And a specific one:</option>
+                {principles.map(p => <option key={p} value={p}>{p}</option>)}
+              </select>
+
+              <hr className="mt-5"></hr>
+            </div>
+
+            {/* Checkboxes */}
+            <div>
+              {/* STATUS */}
+              <p className="mt-5">Status</p>
+              {statusOptions.map(s => (
+                <label key={s} className="block">
+                  <input
+                    type="checkbox"
+                    checked={statuses.includes(s)}
+                    onChange={() => setStatuses(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
+                  />
+                  {" "}{s}
+                </label>))}
+
+              {/* LANGUAGE */}
+              <p className="mt-5">Language of text</p>
+              {langOptions.map(s => (
+                <label key={s} className="block">
+                  <input
+                    type="checkbox"
+                    checked={languages.includes(s)}
+                    onChange={() => setLanguages(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
+                  />
+                  {" "}{s}
+                </label>))}
+
+              {/* SYSTEM */}
+              <p className="mt-5">Legal system</p>
+              {systemOptions.map(s => (
+                <label key={s} className="block">
+                  <input
+                    type="checkbox"
+                    checked={systems.includes(s)}
+                    onChange={() => setSystems(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
+                  />
+                  {" "}{s}
+                </label>))}
+
+              {/* Date range */}
+              <p className="mt-5">Date of implementation</p>
+              <div>
+                <input
+                  type="number"
+                  placeholder="From year"
+                  value={fromYear}
+                  onChange={(e) => setFromYear(e.target.value)}
+                  className="w-full border border-gray-500"
+                />
+                <input
+                  type="number"
+                  placeholder="To year"
+                  value={toYear}
+                  onChange={(e) => setToYear(e.target.value)}
+                  className="w-full border border-gray-500"
+                />
+              </div>
+            </div>
+
+          </aside>
+
+          <main className="flex-1">
+
+            {/* Results */}
+            <div className="mt-8">
+              <h2 className="mr-3 bg-amber-200">Here are the results:</h2>
+              <label className="block mt-2">
+                Sort by date:{" "}
+                <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+                  <option value="">No sorting</option>
+                  <option value="asc">Oldest first</option>
+                  <option value="desc">Newest first</option>
+                </select>
+              </label>
+
+              {sortedEntries.map(entry => <Card entry={entry} key={entry.id} />)}
+            </div>
+
+          </main>
+
+        </div>
+
       </div>
-
-      {/* Search bar */}
-      <div className="w-350 mt-6 max-w-2x1 mx-auto">
-        <input
-          type="text"
-          placeholder="Search by jurisdiction, legislative text, Unidroit principle..."
-          value={searchText}
-          onChange={(e) => setSearchText(e.target.value)}
-          className="w-350 border border-gray-500"
-        />
-      </div>
-
-      
-
-      {/* Dropdowns */}
-      <div className="ml-3 mt-5 mr-3">
-        <p>Select by jurisidiction:</p>
-        <select value={jurisdiction}
-                onChange={(e) => setJurisdiction(e.target.value)}>
-          <option value="">All jurisdictions</option>
-          {jurisdictions.map(j => <option key={j} value={j}>{j}</option>)}
-        </select>
-
-        <hr className="mt-5"></hr>
-
-        <p className="mt-5">Select by legislative text</p>
-        <select value={text}
-                onChange={(e) => setText(e.target.value)}>
-          <option value="">All legislative texts</option>
-          {texts.map(t => <option key={t} value={t}>{t}</option>)}
-        </select>
-
-        <hr className="mt-5"></hr>
-
-        <p className="mt-5">Select by Unidroit instrument</p>
-        <select value={instrument}
-                onChange={(e) => setInstrument(e.target.value)}>
-          <option value="">All UNIDROIT instruments</option>
-          {instruments.map(i => <option key={i} value={i}>{i}</option>)}
-        </select>
-
-       
-
-        <select value={principle}
-                onChange={(e) => setPrinciple(e.target.value)}>
-          <option value="">And a specific one:</option>
-          {principles.map(p => <option key={p} value={p}>{p}</option>)}
-
-        </select>
-
-        <hr className="mt-5"></hr>
-
-      </div>
-
-      {/* Checkboxes */}
-      <div>
-        {/* STATUS */}
-        <p
-        className="mt-5">Status</p>
-        {statusOptions.map(s => (
-          <label key={s}
-          className="block">
-            <input
-            type="checkbox"
-            checked={statuses.includes(s)}
-            onChange={() => setStatuses(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
-            />
-            {" "}{s}
-          </label>))}
-        
-        {/* LANGUAGE */}
-        <p
-        className="mt-5">Language of text</p>
-        {langOptions.map(s => (
-          <label key={s}
-          className="block">
-            <input
-            type="checkbox"
-            checked={languages.includes(s)}
-            onChange={() => setLanguages(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
-            />
-            {" "}{s}
-          </label>))}
-
-
-        {/* SYSTEM */}
-        <p
-        className="mt-5">Legal system</p>
-        {systemOptions.map(s => (
-          <label key={s}
-          className="block">
-            <input
-            type="checkbox"
-            checked={systems.includes(s)}
-            onChange={() => setSystems(prev => prev.includes(s) ? prev.filter(x => x !== s) : [...prev, s])}
-            />
-            {" "}{s}
-          </label>))}
-        
-        {/* Date sliding bar */}
-        <p
-        className="mt-5">Date of implementation</p>
-        <div >
-          <input
-            type="number"
-            placeholder="From year"
-            value={fromYear}
-            onChange={(e) => setFromYear(e.target.value)}
-            className="w-350 border border-gray-500"
-          />
-          <input
-            type="number"
-            placeholder="To year"
-            value={toYear}
-            onChange={(e) => setToYear(e.target.value)}
-            className="w-350 border border-gray-500"
-          />
-        </div>  
-
-      </div>
-    
-    {/* Results */}
-    <div className="mt-8">
-      <h2 className="mr-3 bg-amber-200">Here are the results:</h2>
-      <label className="block mt-2">
-        Sort by date:{" "}
-        <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-          <option value="">No sorting</option>
-          <option value="asc">Oldest first</option>
-          <option value="desc">Newest first</option>
-        </select>
-      </label>
-
-    {sortedEntries.map(entry => <Card entry={entry} key={entry.id}/>)}
- 
-    </div>
-
 
     </div>
-
-    
-     
-
-      
   )
-  }
+}
 
 
-
-  export default App
+export default App
