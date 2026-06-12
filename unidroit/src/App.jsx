@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { CountBarChart, countBy } from "./Charts"
 
 // Shared looks for form controls and sidebar section labels
 const control = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-unidroit/30 focus:border-unidroit"
@@ -129,15 +130,11 @@ function App() {
 
   const sortedEntries = sortOrder === "" ? filteredEntries : [...filteredEntries].sort((a, b) => sortOrder === "asc" ? getDateValue(a) - getDateValue(b) : getDateValue(b) - getDateValue(a))
 
-  // Counts per principle over the *filtered* entries, so charts follow the filters
-  const principleCounts = Object.entries(
-    filteredEntries.reduce((acc, e) => {
-      const key = e.subtitle || "Unspecified"
-      acc[key] = (acc[key] || 0) + 1
-      return acc
-    }, {})
-  ).sort((a, b) => b[1] - a[1])
-  const maxPrincipleCount = principleCounts.length > 0 ? principleCounts[0][1] : 1
+  // Chart data is computed from the *filtered* entries, so charts follow the filters
+  const instrumentCounts = countBy(filteredEntries, e => e.principle_title)
+  const principleCounts = countBy(filteredEntries, e => e.subtitle)
+  const yearCounts = countBy(filteredEntries, e => getYear(e))
+  const jurisdictionCounts = countBy(filteredEntries, e => e.jurisdiction)
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -340,19 +337,11 @@ function App() {
               {sortedEntries.length === 0 ? (
                 <p className="mt-12 text-center text-gray-500">No data matches your search and filters.</p>
               ) : (
-                <div className="mt-4 rounded-xl border border-gray-200 bg-white p-5">
-                  <h3 className="text-sm font-semibold text-gray-900">Implementations per principle</h3>
-                  <div className="mt-4 space-y-2">
-                    {principleCounts.map(([label, count]) => (
-                      <div key={label} className="flex items-center gap-3">
-                        <span className="w-56 shrink-0 truncate text-sm text-gray-700" title={label}>{label}</span>
-                        <div className="flex-1">
-                          <div className="h-5 rounded bg-unidroit" style={{ width: `${(count / maxPrincipleCount) * 100}%` }}></div>
-                        </div>
-                        <span className="w-8 text-right text-sm text-gray-500">{count}</span>
-                      </div>
-                    ))}
-                  </div>
+                <div className="mt-4 space-y-4">
+                  <CountBarChart title="Implementations per instrument" counts={instrumentCounts} />
+                  <CountBarChart title="Implementations per principle" counts={principleCounts} />
+                  <CountBarChart title="Implementations per year" counts={yearCounts} horizontal={false} numericLabels />
+                  <CountBarChart title="Implementations per jurisdiction" counts={jurisdictionCounts} />
                 </div>
               )}
               </>
