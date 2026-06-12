@@ -118,7 +118,8 @@ function App() {
             {/* Dropdowns */}
             <div>
               <p>Select by jurisidiction:</p>
-              <select value={jurisdiction}
+              <select className="w-full"
+                      value={jurisdiction}
                       onChange={(e) => setJurisdiction(e.target.value)}>
                 <option value="">All jurisdictions</option>
                 {jurisdictions.map(j => <option key={j} value={j}>{j}</option>)}
@@ -127,7 +128,8 @@ function App() {
               <hr className="mt-5"></hr>
 
               <p className="mt-5">Select by legislative text</p>
-              <select value={text}
+              <select className="w-full"
+                      value={text}
                       onChange={(e) => setText(e.target.value)}>
                 <option value="">All legislative texts</option>
                 {texts.map(t => <option key={t} value={t}>{t}</option>)}
@@ -136,13 +138,15 @@ function App() {
               <hr className="mt-5"></hr>
 
               <p className="mt-5">Select by Unidroit instrument</p>
-              <select value={instrument}
+              <select className="w-full"
+                      value={instrument}
                       onChange={(e) => setInstrument(e.target.value)}>
                 <option value="">All UNIDROIT instruments</option>
                 {instruments.map(i => <option key={i} value={i}>{i}</option>)}
               </select>
 
-              <select value={principle}
+              <select className="w-full"
+                      value={principle}
                       onChange={(e) => setPrinciple(e.target.value)}>
                 <option value="">And a specific one:</option>
                 {principles.map(p => <option key={p} value={p}>{p}</option>)}
