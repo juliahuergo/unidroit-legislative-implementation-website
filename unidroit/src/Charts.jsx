@@ -41,12 +41,12 @@ export function CountBarChart({ title, counts, horizontal = true, numericLabels 
     yaxis: horizontal ? { autorange: "reversed", automargin: true } : { tickformat: ".0f" },
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
-    font: { size: 12, color: "#374151" },
+    font: { size: 12, color: "#44403c", family: "IBM Plex Sans, sans-serif" },
   }
 
   return (
-    <div className="rounded-xl border border-gray-200 bg-white p-5">
-      <h3 className="text-sm font-semibold text-gray-900">{title}</h3>
+    <div className="rounded-sm border border-stone-200 border-l-[3px] border-l-unidroit bg-white p-5">
+      <h3 className="font-serif text-base font-semibold text-stone-900">{title}</h3>
       <Plot
         data={data}
         layout={layout}

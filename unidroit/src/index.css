@@ -1,6 +1,13 @@
 @import "tailwindcss";
 
 @theme {
+  /* Typography: clean sans for body, scholarly serif for headings */
+  --font-sans: "IBM Plex Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Source Serif 4", ui-serif, Georgia, serif;
+
+  /* Page background — a barely-there neutral, softer than pure white */
+  --color-paper: #fafafa;
+
   /* UNIDROIT brand teal, sampled from the logo, plus derived shades */
   --color-unidroit: #014154;
   --color-unidroit-700: #0c637c; /* lighter teal for hover states */

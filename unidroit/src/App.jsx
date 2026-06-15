@@ -2,15 +2,15 @@ import { useState, useEffect } from "react"
 import { CountBarChart, countBy } from "./Charts"
 
 // Shared looks for form controls and sidebar section labels
-const control = "w-full rounded-lg border border-gray-300 bg-white px-3 py-2 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-unidroit/30 focus:border-unidroit"
-const sectionLabel = "block text-xs font-semibold uppercase tracking-wide text-gray-500 mb-1.5"
+const control = "w-full rounded-sm border border-stone-300 bg-white px-3 py-2 text-sm text-stone-800 focus:outline-none focus:border-unidroit focus:ring-1 focus:ring-unidroit"
+const sectionLabel = "block text-xs font-semibold uppercase tracking-wide text-stone-500 mb-1.5"
 
 
 function Detail({ label, value }) {
   if (!value) return null
   return (
-    <p className="text-sm text-gray-700">
-      <span className="font-medium text-gray-900">{label}: </span>{value}
+    <p className="text-sm text-stone-700">
+      <span className="font-medium text-stone-900">{label}: </span>{value}
     </p>
   )
 }
@@ -18,28 +18,27 @@ function Detail({ label, value }) {
 
 function Card({ entry }) {
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-5 hover:shadow-md transition-shadow">
-
+    <div className="bg-white rounded-sm border border-stone-200 border-l-[3px] border-l-unidroit p-5 transition-colors hover:border-stone-300">
       <div className="flex items-start justify-between gap-3">
-        <h3 className="text-lg font-semibold text-gray-900 leading-snug">{entry.text_title}</h3>
+        <h3 className="font-serif text-lg font-semibold text-stone-900 leading-snug">{entry.text_title}</h3>
         {entry.status && (
-          <span className="shrink-0 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 px-2.5 py-0.5 text-xs font-medium">
+          <span className="shrink-0 rounded-sm border border-unidroit-700 text-unidroit-700 px-2 py-0.5 text-[11px] font-semibold uppercase tracking-wide">
             {entry.status}
           </span>
         )}
       </div>
 
-      <p className="mt-1 text-sm text-gray-500">
+      <p className="mt-1 text-sm text-stone-500">
         {entry.jurisdiction}
         {entry.date && ` · ${entry.date}`}
         {entry.legal_system && ` · ${entry.legal_system}`}
         {entry.text_language && ` · ${entry.text_language}`}
       </p>
 
-      <div className="mt-3 rounded-lg bg-unidroit-50 border border-unidroit-100 p-3">
+      <div className="mt-3 rounded-sm border-l-2 border-unidroit bg-unidroit-50 px-3 py-2">
         <p className="text-xs font-semibold uppercase tracking-wide text-unidroit">UNIDROIT instrument</p>
-        <p className="mt-1 text-sm font-medium text-gray-800">{entry.principle_title}</p>
-        <p className="text-sm text-gray-600">
+        <p className="mt-1 text-sm font-medium text-stone-800">{entry.principle_title}</p>
+        <p className="text-sm text-stone-600">
           {entry.subtitle}
           {entry['num principle/article'] && ` (${entry.type || "Principle"} ${entry['num principle/article']})`}
         </p>
@@ -137,16 +136,16 @@ function App() {
   const jurisdictionCounts = countBy(filteredEntries, e => e.jurisdiction)
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-paper">
 
       {/* Header */}
       <div className="bg-white border-b-4 border-unidroit px-8 py-5 flex items-center gap-6">
         <a href="https://www.unidroit.org" target="_blank" rel="noopener noreferrer" className="shrink-0">
           <img src="/unidroit_logo.png" alt="UNIDROIT — International Institute for the Unification of Private Law" className="h-14 w-auto" />
         </a>
-        <div className="border-l border-gray-300 pl-6">
-          <h1 className="text-3xl font-bold tracking-tight text-unidroit">Implementation Database</h1>
-          <p className="text-gray-500 mt-1 text-sm">Legislative implementation of UNIDROIT soft-law instruments worldwide</p>
+        <div className="border-l border-stone-300 pl-6">
+          <h1 className="font-serif text-3xl font-bold tracking-tight text-unidroit">Implementation Database</h1>
+          <p className="text-stone-500 mt-1 text-sm">Legislative implementation of UNIDROIT soft-law instruments worldwide</p>
         </div>
       </div>
 
@@ -159,16 +158,16 @@ function App() {
             placeholder="Search by jurisdiction, legislative text, UNIDROIT principle..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            className="w-full rounded-xl border border-gray-300 bg-white px-4 py-2.5 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-unidroit/30 focus:border-unidroit"
+            className="w-full rounded-sm border border-stone-300 bg-white px-4 py-2.5 text-sm focus:outline-none focus:border-unidroit focus:ring-1 focus:ring-unidroit"
           />
         </div>
 
         <div className="flex gap-8 mt-8">
 
           <aside className="w-64 shrink-0">
-            <div className="rounded-xl border border-gray-200 bg-white p-4 space-y-5">
+            <div className="rounded-sm border border-stone-200 bg-white p-4 space-y-5">
 
-              <h2 className="text-sm font-semibold text-gray-900">Filters</h2>
+              <h2 className="text-sm font-semibold text-stone-900">Filters</h2>
 
               <div>
                 <label className={sectionLabel}>Jurisdiction</label>
@@ -210,7 +209,7 @@ function App() {
                 <label className={sectionLabel}>Status</label>
                 <div className="space-y-1">
                   {statusOptions.map(s => (
-                    <label key={s} className="flex items-center gap-2 text-sm text-gray-700">
+                    <label key={s} className="flex items-center gap-2 text-sm text-stone-700">
                       <input
                         type="checkbox"
                         className="accent-unidroit"
@@ -226,7 +225,7 @@ function App() {
                 <label className={sectionLabel}>Language of text</label>
                 <div className="space-y-1">
                   {langOptions.map(s => (
-                    <label key={s} className="flex items-center gap-2 text-sm text-gray-700">
+                    <label key={s} className="flex items-center gap-2 text-sm text-stone-700">
                       <input
                         type="checkbox"
                         className="accent-unidroit"
@@ -242,7 +241,7 @@ function App() {
                 <label className={sectionLabel}>Legal system</label>
                 <div className="space-y-1">
                   {systemOptions.map(s => (
-                    <label key={s} className="flex items-center gap-2 text-sm text-gray-700">
+                    <label key={s} className="flex items-center gap-2 text-sm text-stone-700">
                       <input
                         type="checkbox"
                         className="accent-unidroit"
@@ -280,7 +279,7 @@ function App() {
           <main className="flex-1">
 
             {/* Tabs */}
-            <div className="mb-4 flex gap-6 border-b border-gray-200">
+            <div className="mb-4 flex gap-6 border-b border-stone-200">
               {[["results", "Results"], ["visualizations", "Visualizations"]].map(([id, label]) => (
                 <button
                   key={id}
@@ -288,7 +287,7 @@ function App() {
                   className={`pb-2 text-sm font-medium border-b-2 -mb-px transition-colors ${
                     activeTab === id
                       ? "border-unidroit text-unidroit"
-                      : "border-transparent text-gray-500 hover:text-gray-700"
+                      : "border-transparent text-stone-500 hover:text-stone-700"
                   }`}>
                   {label}
                 </button>
@@ -300,13 +299,13 @@ function App() {
 
             {/* Results */}
             <div className="flex items-center justify-between">
-              <h2 className="text-lg font-semibold text-gray-900">
-                Results <span className="font-normal text-gray-400">({sortedEntries.length})</span>
+              <h2 className="font-serif text-lg font-semibold text-stone-900">
+                Results <span className="font-normal text-stone-400">({sortedEntries.length})</span>
               </h2>
-              <label className="flex items-center gap-2 text-sm text-gray-600">
+              <label className="flex items-center gap-2 text-sm text-stone-600">
                 Sort by date
                 <select
-                  className="rounded-lg border border-gray-300 bg-white px-2 py-1.5 text-sm text-gray-800 focus:outline-none focus:ring-2 focus:ring-unidroit/30"
+                  className="rounded-sm border border-stone-300 bg-white px-2 py-1.5 text-sm text-stone-800 focus:outline-none focus:border-unidroit focus:ring-1 focus:ring-unidroit"
                   value={sortOrder}
                   onChange={(e) => setSortOrder(e.target.value)}>
                   <option value="">No sorting</option>
@@ -317,7 +316,7 @@ function App() {
             </div>
 
             {sortedEntries.length === 0 ? (
-              <p className="mt-12 text-center text-gray-500">No results match your search and filters.</p>
+              <p className="mt-12 text-center text-stone-500">No results match your search and filters.</p>
             ) : (
               <div className="mt-4 grid gap-4 md:grid-cols-2">
                 {sortedEntries.map(entry => <Card entry={entry} key={entry.id} />)}
@@ -329,13 +328,13 @@ function App() {
 
             {activeTab === "visualizations" && (
               <>
-              <h2 className="text-lg font-semibold text-gray-900">
-                Visualizations <span className="font-normal text-gray-400">({sortedEntries.length} entries)</span>
+              <h2 className="font-serif text-lg font-semibold text-stone-900">
+                Visualizations <span className="font-normal text-stone-400">({sortedEntries.length} entries)</span>
               </h2>
-              <p className="mt-1 text-sm text-gray-500">Charts reflect the current search and filters.</p>
+              <p className="mt-1 text-sm text-stone-500">Charts reflect the current search and filters.</p>
 
               {sortedEntries.length === 0 ? (
-                <p className="mt-12 text-center text-gray-500">No data matches your search and filters.</p>
+                <p className="mt-12 text-center text-stone-500">No data matches your search and filters.</p>
               ) : (
                 <div className="mt-4 space-y-4">
                   <CountBarChart title="Implementations per instrument" counts={instrumentCounts} />
