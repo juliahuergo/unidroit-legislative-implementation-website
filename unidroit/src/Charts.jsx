@@ -8,10 +8,13 @@ const createPlotlyComponent = plotlyFactory.default || plotlyFactory
 // Build the <Plot> component from the minified Plotly bundle (smaller than full plotly.js)
 const Plot = createPlotlyComponent(Plotly)
 
-// Brand teal for chart marks. Read from the single source of truth in
-// index.css (--color-unidroit) so the colour is never duplicated as a literal.
-const TEAL =
-  getComputedStyle(document.documentElement).getPropertyValue("--color-unidroit").trim() || "#014154"
+// Read a CSS custom property so colours and fonts have a single source of truth
+// (defined in index.css) rather than being duplicated as literals here.
+const cssVar = (name, fallback) =>
+  getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback
+
+const TEAL = cssVar("--color-unidroit", "#014154")
+const CHART_FONT = cssVar("--font-sans", "sans-serif")
 
 // One bar chart in a card. Horizontal bars suit long labels (instruments, jurisdictions);
 // vertical bars suit numeric axes like years (numericLabels sorts by label instead of count).
@@ -33,7 +36,7 @@ export function CountBarChart({ title, counts, horizontal = true, numericLabels 
     yaxis: horizontal ? { autorange: "reversed", automargin: true } : { tickformat: ".0f" },
     paper_bgcolor: "rgba(0,0,0,0)",
     plot_bgcolor: "rgba(0,0,0,0)",
-    font: { size: 12, color: "#44403c", family: "IBM Plex Sans, sans-serif" },
+    font: { size: 12, color: "#44403c", family: CHART_FONT },
   }
 
   return (

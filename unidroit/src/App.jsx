@@ -13,8 +13,10 @@ const countBy = (entries, keyFn) => {
   return counts
 }
 
-// Shared looks for form controls and sidebar section labels
-const control = "w-full rounded-sm border border-stone-300 bg-white px-3 py-2 text-sm text-stone-800 focus:outline-none focus:border-unidroit focus:ring-1 focus:ring-unidroit"
+// Base look shared by every text input, <select>, and the search box — restyle
+// inputs in one place. `control` is the full-width sidebar variant.
+const field = "rounded-sm border border-stone-300 bg-white text-sm focus:outline-none focus:border-unidroit focus:ring-1 focus:ring-unidroit"
+const control = `w-full px-3 py-2 text-stone-800 ${field}`
 const sectionLabel = "block text-xs font-semibold uppercase tracking-wide text-stone-500 mb-1.5"
 
 // Languages live slash-separated in a single field, e.g. "English / French".
@@ -129,7 +131,7 @@ function Card({ entry }) {
       </div>
 
       {entry.link && (
-        <a href={entry.link} target="_blank" rel="noreferrer"
+        <a href={entry.link} target="_blank" rel="noopener noreferrer"
            className="mt-4 inline-block text-sm font-medium text-unidroit hover:text-unidroit-700 hover:underline">
           View document →
         </a>
@@ -216,7 +218,7 @@ function App() {
             placeholder="Search by jurisdiction, legislative text, UNIDROIT principle..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            className="w-full rounded-sm border border-stone-300 bg-white px-4 py-2.5 text-sm focus:outline-none focus:border-unidroit focus:ring-1 focus:ring-unidroit"
+            className={`w-full px-4 py-2.5 ${field}`}
           />
         </div>
 
@@ -287,7 +289,7 @@ function App() {
               <label className="flex items-center gap-2 text-sm text-stone-600">
                 Sort by date
                 <select
-                  className="rounded-sm border border-stone-300 bg-white px-2 py-1.5 text-sm text-stone-800 focus:outline-none focus:border-unidroit focus:ring-1 focus:ring-unidroit"
+                  className={`px-2 py-1.5 text-stone-800 ${field}`}
                   value={sortOrder}
                   onChange={(e) => setSortOrder(e.target.value)}>
                   <option value="">No sorting</option>
