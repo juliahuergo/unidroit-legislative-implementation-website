@@ -8,18 +8,10 @@ const createPlotlyComponent = plotlyFactory.default || plotlyFactory
 // Build the <Plot> component from the minified Plotly bundle (smaller than full plotly.js)
 const Plot = createPlotlyComponent(Plotly)
 
-const TEAL = "#014154"
-
-// Count how many entries share each value of keyFn, e.g. countBy(entries, e => e.jurisdiction)
-export function countBy(entries, keyFn) {
-  const counts = {}
-  for (const entry of entries) {
-    const key = keyFn(entry)
-    if (key === undefined || key === null || key === "" || Number.isNaN(key)) continue
-    counts[key] = (counts[key] || 0) + 1
-  }
-  return counts
-}
+// Brand teal for chart marks. Read from the single source of truth in
+// index.css (--color-unidroit) so the colour is never duplicated as a literal.
+const TEAL =
+  getComputedStyle(document.documentElement).getPropertyValue("--color-unidroit").trim() || "#014154"
 
 // One bar chart in a card. Horizontal bars suit long labels (instruments, jurisdictions);
 // vertical bars suit numeric axes like years (numericLabels sorts by label instead of count).

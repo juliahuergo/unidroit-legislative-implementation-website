@@ -1,42 +1,39 @@
+"""Regenerate public/result.json from the project's Google Sheet.
+
+Reads the three source tabs (legislative texts, the text-principle bridge, and
+UNIDROIT principles), joins them into one row per text-principle connection, and
+writes the result as JSON for the frontend to fetch. Run it directly; the output
+path is resolved relative to this file, so the working directory does not matter.
 """
-Download csv to pandas DataFrames.
-Clean the Dfs and make them into the correct columns to be automated.
-"""
+
+from pathlib import Path
 
 import pandas as pd  # type: ignore[reportMissingModuleSource]
 
 SHEET_ID = "1xbav3keP8A6UWtpj9vCshVaVPzP_DoE3_qWZaX3yZfA"
+OUTPUT_PATH = Path(__file__).resolve().parents[1] / "public" / "result.json"
 
-def sheet_url(sheet_name):
+
+def sheet_url(sheet_name: str) -> str:
+    """URL that exports one tab of the Google Sheet as CSV."""
     return f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
 
-def main():
-    
 
-    #Load
-    df_texts = pd.read_csv(sheet_url("legislative_texts"), sep=',')
-    df_merged = pd.read_csv(sheet_url("merged"), sep=',')
-    df_principles = pd.read_csv(sheet_url("unidroit_principles"), sep=',')
+def main() -> None:
+    texts = pd.read_csv(sheet_url("legislative_texts"))
+    bridge = pd.read_csv(sheet_url("merged"))
+    principles = pd.read_csv(sheet_url("unidroit_principles"))
 
-    #Merge (one row per text-principle connection)
+    # The bridge carries the foreign keys; the other tables supply the
+    # human-readable columns. Renaming "id"/"title" keeps both joins unambiguous.
     result = (
-        df_merged
-        .merge(
-            df_texts.rename(columns={'id': 'text_id', 'title': 'text_title'}),
-            on='text_id'
-        )
-        .merge(
-            df_principles.rename(columns={'id': 'principle_id', 'title': 'principle_title'}),
-            on='principle_id'
-        )
+        bridge
+        .merge(texts.rename(columns={"id": "text_id", "title": "text_title"}), on="text_id")
+        .merge(principles.rename(columns={"id": "principle_id", "title": "principle_title"}), on="principle_id")
     )
-    
-    #Converting DataFrame to JSON
-    result.to_json('unidroit/public/result.json', orient="records", indent=2, force_ascii=False)
 
+    result.to_json(OUTPUT_PATH, orient="records", indent=2, force_ascii=False)
 
 
 if __name__ == "__main__":
     main()
-
-
