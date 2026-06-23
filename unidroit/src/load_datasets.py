@@ -1,39 +1,35 @@
-"""Regenerate public/result.json from the project's Google Sheet.
+"""
+This script reads directly from the Google Spreadsheet where the data is written in
+(accessible to 'anyone with the link'), converts to dataframes and merges into one.
 
-Reads the three source tabs (legislative texts, the text-principle bridge, and
-UNIDROIT principles), joins them into one row per text-principle connection, and
-writes the result as JSON for the frontend to fetch. Run it directly; the output
-path is resolved relative to this file, so the working directory does not matter.
+Three tables are read: 
+- legislative_texts : contains one row per text created/implemented in a foreign jurisdiction
+- unidroit_instruments : contains one row per principle/article created by Unidroit
+- merged : acts as the connection between the other two tables: has one row per instrument-text connection
+
+After reading the three into Pandas Dataframes, they are merged into the 'result' Dataframe using 
+text_id (PK in legislative_texts) and principle_id (PK in unidroit_instruments) as foreign keys
+to join by.
+
+This resulting Dataframe is finally converted into a JSON file stored in the folder 'public' to be then used 
+by the Javascript, HTML and CSS files.
 """
 
+
+import pandas as pd
 from pathlib import Path
 
-import pandas as pd  # type: ignore[reportMissingModuleSource]
+address = 'https://docs.google.com/spreadsheets/d/1xbav3keP8A6UWtpj9vCshVaVPzP_DoE3_qWZaX3yZfA/gviz/tq?tqx=out:csv&sheet='
 
-SHEET_ID = "1xbav3keP8A6UWtpj9vCshVaVPzP_DoE3_qWZaX3yZfA"
-OUTPUT_PATH = Path(__file__).resolve().parents[1] / "public" / "result.json"
+def main():
+    df_texts = pd.read_csv(address+'legislative_texts')
+    df_unidroit = pd.read_csv(address+'unidroit_principles')
+    df_merged = pd.read_csv(address+'merged')
 
+    result = df_merged.merge(df_texts, on='text_id').merge(df_unidroit, on='principle_id')
 
-def sheet_url(sheet_name: str) -> str:
-    """URL that exports one tab of the Google Sheet as CSV."""
-    return f"https://docs.google.com/spreadsheets/d/{SHEET_ID}/gviz/tq?tqx=out:csv&sheet={sheet_name}"
-
-
-def main() -> None:
-    texts = pd.read_csv(sheet_url("legislative_texts"))
-    bridge = pd.read_csv(sheet_url("merged"))
-    principles = pd.read_csv(sheet_url("unidroit_principles"))
-
-    # The bridge carries the foreign keys; the other tables supply the
-    # human-readable columns. Renaming "id"/"title" keeps both joins unambiguous.
-    result = (
-        bridge
-        .merge(texts.rename(columns={"id": "text_id", "title": "text_title"}), on="text_id")
-        .merge(principles.rename(columns={"id": "principle_id", "title": "principle_title"}), on="principle_id")
-    )
-
-    result.to_json(OUTPUT_PATH, orient="records", indent=2, force_ascii=False)
-
+    json_path = Path(__file__).resolve().parent.parent/"public"/"result.json"
+    result.to_json(json_path, orient='records', indent=2, force_ascii=False)
 
 if __name__ == "__main__":
     main()

@@ -1,54 +1,145 @@
-import plotlyFactory from "react-plotly.js/factory"
 import Plotly from "plotly.js-dist-min"
+import createPlotlyComponent from "react-plotly.js/factory"
+const Plot = (createPlotlyComponent.default || createPlotlyComponent)(Plotly)
 
-// react-plotly.js is a CommonJS package: depending on the bundler, the import is
-// either the factory function itself or an object wrapping it under .default
-const createPlotlyComponent = plotlyFactory.default || plotlyFactory
-
-// Build the <Plot> component from the minified Plotly bundle (smaller than full plotly.js)
-const Plot = createPlotlyComponent(Plotly)
-
-// Read a CSS custom property so colours and fonts have a single source of truth
-// (defined in index.css) rather than being duplicated as literals here.
-const cssVar = (name, fallback) =>
-  getComputedStyle(document.documentElement).getPropertyValue(name).trim() || fallback
-
-const TEAL = cssVar("--color-unidroit", "#014154")
-const CHART_FONT = cssVar("--font-sans", "sans-serif")
-
-// One bar chart in a card. Horizontal bars suit long labels (instruments, jurisdictions);
-// vertical bars suit numeric axes like years (numericLabels sorts by label instead of count).
-export function CountBarChart({ title, counts, horizontal = true, numericLabels = false }) {
-  const pairs = Object.entries(counts).sort(
-    numericLabels ? (a, b) => Number(a[0]) - Number(b[0]) : (a, b) => b[1] - a[1]
-  )
-  const labels = pairs.map(([key]) => key)
-  const values = pairs.map(([, count]) => count)
-
-  const data = horizontal
-    ? [{ type: "bar", orientation: "h", x: values, y: labels, marker: { color: TEAL } }]
-    : [{ type: "bar", x: labels, y: values, marker: { color: TEAL } }]
-
-  const layout = {
-    height: horizontal ? Math.max(160, 60 + labels.length * 32) : 300,
-    margin: { l: horizontal ? 10 : 50, r: 20, t: 10, b: 40 },
-    xaxis: horizontal ? { tickformat: ".0f" } : { type: "category" },
-    yaxis: horizontal ? { autorange: "reversed", automargin: true } : { tickformat: ".0f" },
-    paper_bgcolor: "rgba(0,0,0,0)",
-    plot_bgcolor: "rgba(0,0,0,0)",
-    font: { size: 12, color: "#44403c", family: CHART_FONT },
-  }
-
-  return (
-    <div className="rounded-sm border border-stone-200 border-l-[3px] border-l-unidroit bg-white p-5">
-      <h3 className="font-serif text-base font-semibold text-stone-900">{title}</h3>
-      <Plot
-        data={data}
-        layout={layout}
-        config={{ displayModeBar: false, responsive: true }}
-        useResizeHandler
-        style={{ width: "100%" }}
-      />
-    </div>
-  )
+function countBy(rows, key){
+    const counts = {}
+    for (const row of rows) {
+        counts[key(row)] = (counts[key(row)] || 0) + 1
+    }
+        
+    return (
+        counts
+    )
 }
+
+function Charts({data}) {
+    const countJurisdiction = countBy(data, row => row.jurisdiction)
+    const keysJurisdictions = Object.keys(countJurisdiction)
+    const valsJurisdictions = Object.values(countJurisdiction)
+
+    const countDates = countBy(data, row => row.date.split("/").at(-1))
+    const keysYears = Object.keys(countDates)
+    const valsYears = Object.values(countDates)
+
+    const countInstruments = countBy(data, row => row.principle_title)
+    const keysInstruments = Object.keys(countInstruments)
+    const valsInstruments = Object.values(countInstruments)
+
+    const countPrinciples = countBy(data, row => row.subtitle)
+    const keysPrinciples = Object.keys(countPrinciples)
+    const valsPrinciples = Object.values(countPrinciples)
+
+    const countSystems = countBy(data, row => row.legal_system)
+    const keysSystems = Object.keys(countSystems)
+    const valsSystems = Object.values(countSystems)
+
+    return (
+        <div>
+            <Plot
+                data={[{type:"bar", orientation: "h", x: valsJurisdictions, y: keysJurisdictions,
+                    hovertemplate: "%{y}<br>Implementations: %{x}<extra></extra>",
+                    marker:{
+                        color: valsJurisdictions,
+                        colorscale: "Blues",
+                        showscale: false
+                    }
+                }]}
+                layout={{title: {text: "Jurisdictions with the most connections to Unidroit"},
+                        xaxis: {title: {text: "Number of implementations"}},
+                        yaxis: {title: {text: "Jurisdiction", standoff: 20}, categoryorder: "total ascending", automargin: true
+                        }
+                }}
+                useResizeHandler
+                style={{ width: "100%", height: "500px" }}
+            />
+
+            <Plot
+                data={[{type:"bar", orientation: "v", x: keysYears, y: valsYears,
+                    hovertemplate: "Year: %{x}<br>Implementations: %{y}<extra></extra>",
+                    marker:{
+                        color: valsYears,
+                        colorscale: "Blues",
+                        showscale: false
+                    }
+                }]}
+                layout={{title: {text: "Number of implementations per year"},
+                        xaxis: {title: {text: "Year"}},
+                        yaxis: {title: {text: "Number of implementations", standoff: 20}}
+                }}
+                useResizeHandler
+                style={{ width: "100%", height: "500px" }}
+            />
+
+            <Plot
+                data={[{type:"bar", orientation: "h", x: valsInstruments, y: keysInstruments,
+                    hovertemplate: "%{y}<br>Implementations: %{x}<extra></extra>",
+                    marker:{
+                        color: valsInstruments,
+                        colorscale: "Blues",
+                        showscale: false
+                    }
+                }]}
+                layout={{title: {text: "Most implemented Unidroit instruments"},
+                        xaxis: {title: {text: "Number of implementations"}},
+                        yaxis: {title: {text: "Instrument", standoff: 20}, categoryorder: "total ascending", automargin: true
+                        }
+                }}               
+                useResizeHandler
+                style={{ width: "100%", height: "500px" }}
+            />
+
+            <Plot
+                data={[{type:"bar", orientation: "h", x: valsPrinciples, y: keysPrinciples,
+                    hovertemplate: "%{y}<br>Implementations: %{x}<extra></extra>",
+                    marker:{
+                        color: valsPrinciples,
+                        colorscale: "Blues",
+                        showscale: false
+                    }
+                }]}
+                layout={{title: {text: "Most implemented Unidroit principles/articles"},
+                        xaxis: {title: {text: "Number of implementations"}},
+                        yaxis: {title: {text: "Principle/Article", standoff: 20}, categoryorder: "total ascending", automargin: true
+                        }
+                }}    
+                useResizeHandler
+                style={{ width: "100%", height: "500px" }}
+            />
+
+            <Plot
+                data={[{type: "pie", labels: keysSystems, values: valsSystems,
+                    hovertemplate: "%{label}<br>%{value} implementations (%{percent})<extra></extra>"
+                }]}
+                layout={{title: {text: "Legal systems that have implemented Unidroit"}}}
+                useResizeHandler
+                style={{ width: "100%", height: "500px" }}
+            />
+
+            <Plot
+                data={[{type: "scattergeo", locationmode: "country names", locations: keysJurisdictions,
+                    customdata: valsJurisdictions,
+                    text: keysJurisdictions, 
+                    marker: {
+                        size: valsJurisdictions, 
+                        color: valsJurisdictions,
+                        sizemode: "area", 
+                        sizeref: 2* Math.max(...valsJurisdictions) / (40**2),
+                        sizemin: 4,
+                        colorscale: "Blues", 
+                        showscale: true, 
+                        colorbar: {title: {text: "Number of implementations"}}
+                    },
+                    hovertemplate: "%{location}<br>Implementations: %{customdata}<extra></extra>"
+                }]}
+                layout={{title: {text: "Jurisdictions implementing Unidroit instruments"}, 
+                        geo: {projection: {type: "natural earth"}}
+            }}
+                useResizeHandler
+                style={{ width: "100%", height: "500px" }}
+            />
+        </div>
+    )
+}
+
+export default Charts

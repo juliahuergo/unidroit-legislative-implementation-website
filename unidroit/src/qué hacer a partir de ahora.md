@@ -1,4 +1,0 @@
-- llegar a una web que me guste (prompts para cambiar cosas)
-- que limpie el código (que me mande el prompt blanca)
-- que me explique conceptos, por qué ha escrito una cosa frente a la otra etc
-- sabiendo esto escribir lo mío (App.jsx, css)
