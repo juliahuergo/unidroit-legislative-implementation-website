@@ -47,16 +47,23 @@ function Field({label, value}){
     <span className="font-semibold">
       {label}: 
     </span>
-    {value}
+    {" "} {value}
   </p>
 }
 
 function ResultCard({row}){
+
+  const STATUS_COLOURS = {
+    Commenced: "bg-gray-100 text-gray-800",
+    Ongoing: "bg-yellow-100 text-yellow-800",
+    Enacted: "bg-green-100 text-green-800"
+  }
+
   return (
     <div className="border border-gray-200 rounded-md p-4">
       <h3 className="text-lg font-bold">{row.text_title}</h3>
-      <span className="ml-2 px-2 py-0.5 text-xs rounded bg-gray-100">{row.status}</span>
-      <p className="text-sm text-gray-600">
+      <span className={`inline-block mt-2 ml-2 px-2 py-0.5 text-xs rounded ${STATUS_COLOURS[row.status] || "bg-gray-100"}`}>{row.status}</span>
+      <p className="text-sm text-gray-600 mt-2">
         {row.jurisdiction} · {row.legal_system} · {row.date}
       </p>
 
@@ -92,6 +99,8 @@ function App() {
   const all_languages = [...new Set(data.flatMap(row => row.text_language.split("/")))]
   const all_statuses = [...new Set(data.map(row => row.status))]
   const all_systems = [...new Set(data.map(row => row.legal_system))]
+
+ 
 
   //FROM the filters (the ones that the user chooses)
   const [jurisdictions, setJurisdictions] = useState([])
