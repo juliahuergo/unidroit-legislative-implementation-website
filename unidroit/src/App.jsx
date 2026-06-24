@@ -79,7 +79,9 @@ function ResultCard({row}){
       <Field label= "Language of text" value={row.text_language}/>
       <Field label= "States involved" value={row.states_usa}/>
       
-      {row.link && <a href={row.link} target="_blank" className="text-blue-600 underline">Source</a>}
+      {row.link && <a href={row.link} rel="noopener noreferrer" target="_blank" className="text-blue-600 underline">Source</a>}
+      <br/>
+      {row.perma_link && <a href={row.perma_link} rel="noopener noreferrer" target="_blank">If the link doesn't work, click <span className="text-blue-600 underline">here</span> for the screenshotted document.</a>}
     </div>
   )
 }
