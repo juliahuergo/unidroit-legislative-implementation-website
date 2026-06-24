@@ -51,7 +51,7 @@ function Field({label, value}){
   </p>
 }
 
-function ResultCard({row}){
+function ResultCard({group}){
 
   const STATUS_COLOURS = {
     Ongoing: "bg-gray-100 text-gray-800",
@@ -61,27 +61,32 @@ function ResultCard({row}){
 
   return (
     <div className="border border-gray-200 rounded-md p-4">
-      <h3 className="text-lg font-bold">{row.text_title}</h3>
-      <span className={`inline-block mt-2 ml-2 px-2 py-0.5 text-xs rounded ${STATUS_COLOURS[row.status] || "bg-gray-100"}`}>{row.status}</span>
+      <h3 className="text-lg font-bold">{group.text_title}</h3>
+      <span className={`inline-block mt-2 ml-2 px-2 py-0.5 text-xs rounded ${STATUS_COLOURS[group.status] || "bg-gray-100"}`}>{group.status}</span>
       <p className="text-sm text-gray-600 mt-2">
-        {row.jurisdiction} · {row.legal_system} · {row.date}
+        {group.jurisdiction} · {group.legal_system} · {group.date}
       </p>
 
       <h4 className="mt-3 text-sm uppercase text-gray-500">Implements</h4>
-      <p>{row.principle_title}</p>
-      <p>{row.subtitle} (Principle {row["num principle/article"]})</p>
+      {group.implementations.map(impl => (
+        <div key={impl.id} className="mt-2 border-l-2 border-gray-200 pl-3">
+          <p>{impl.principle_title}</p>
+          <p>{impl.subtitle} (Principle {impl["num principle/article"]})</p>
+          <Field label="Sections" value={impl.sections}/>
+          <Field label="Summary" value={impl.summary}/>
+          <Field label="Notes" value={impl.notes}/>
+        </div>
+      ))}
+    
 
       <h4 className="mt-3 text-sm uppercase text-gray-500">Details</h4>
-      <Field label= "Sections" value={row.sections}/>
-      <Field label= "Summary" value={row.summary}/>
-      <Field label= "Notes" value={row.notes}/>
-      <Field label= "Promulgating body" value={row.promulgating_body}/>
-      <Field label= "Language of text" value={row.text_language}/>
-      <Field label= "States involved" value={row.states_usa}/>
-      
-      {row.link && <a href={row.link} rel="noopener noreferrer" target="_blank" className="text-blue-600 underline">Source</a>}
+      <Field label= "Promulgating body" value={group.promulgating_body}/>
+      <Field label= "Language of text" value={group.text_language}/>
+      <Field label= "States involved" value={group.states_usa}/>
+
+      {group.link && <a href={group.link} rel="noopener noreferrer" target="_blank" className="text-blue-600 underline">Source</a>}
       <br/>
-      {row.perma_link && <a href={row.perma_link} rel="noopener noreferrer" target="_blank">If the link doesn't work, click <span className="text-blue-600 underline">here</span> for the screenshotted document.</a>}
+      {group.perma_link && <a href={group.perma_link} rel="noopener noreferrer" target="_blank">If the link doesn't work, click <span className="text-blue-600 underline">here</span> for the screenshotted document.</a>}
     </div>
   )
 }
@@ -139,6 +144,14 @@ function App() {
       (fromYear === "" || row.date.split("/").at(-1) >= Number(fromYear)) &&
       (toYear === "" || row.date.split("/").at(-1) <= Number(toYear))
   )
+
+  const grouped = Object.values(
+    filtered.reduce((acc, row) => {
+      (acc[row.text_id] ??= {...row,
+        implementations: []
+      }).implementations.push(row)
+        return acc
+    }, {}))
 
   return (
     <div className="px-4 md:px-8 pb-8 pt-4">
@@ -224,7 +237,7 @@ function App() {
           </div>
 
           <div className="border border-gray-300 border-t-0 p-4">
-            {activeTab === "results" && filtered.map(row => <ResultCard key={row.id} row={row}/>)}
+            {activeTab === "results" && grouped.map(group => <ResultCard key={group.id} group={group}/>)}
             {activeTab === "visualizations" && (<Charts data={filtered}/>)}
           </div>
         </main>
