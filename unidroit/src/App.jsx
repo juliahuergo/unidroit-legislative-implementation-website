@@ -143,10 +143,13 @@ function App() {
   return (
     <div className="px-4 md:px-8 pb-8 pt-4">
       <header className="flex items-center gap-3 pb-4 pt-0 border-b border-gray-300 mb-5">
+        <a href="https://www.unidroit.org/" target="_blank" rel="noopener noreferrer"
+        className="flex items-center gap-3">
         <img src="/unidroit_logo.png" alt="UNIDROIT" className="h-10 md:h-15"/>
         <h1 className="text-lg md:text-xl font-semibold ml-3">
           Soft-Law Implementation Database
         </h1>
+        </a>
       </header>
       <button
         onClick = {() => setShowFilters(!showFilters)}
