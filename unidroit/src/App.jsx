@@ -89,7 +89,7 @@ function App() {
 
   //All the objects are stored in data
   const [data, setData] = useState([])
-  useEffect(() => {fetch("/result.json").then(r => r.json()).then(setData) }, [])
+  useEffect(() => {fetch(import.meta.env.BASE_URL + "/result.json").then(r => r.json()).then(setData) }, [])
 
   //For the filters (all the unique available values)
   const all_jurisdictions = [...new Set(data.map(row => row.jurisdiction))]
