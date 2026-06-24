@@ -68,16 +68,10 @@ receives a push, whether from a person or from the refresh workflow:
 
 Pages serves the site under the subpath `/unidroit-legislative-implementation-website/`,
 while Vercel serves from the domain root. `unidroit/vite.config.js` handles
-this for the app's own bundle: the Pages workflow sets the environment
-variable `GHPAGES`, which switches Vite's `base` option so the built
-JS/CSS asset URLs resolve correctly under the Pages subpath.
-
-Note that the data file is fetched from the site root: `App.jsx` calls
-`fetch("/result.json")`. This works on Vercel and in local development
-(both serve from the root), but on the GitHub Pages mirror `/result.json`
-resolves to the domain root rather than the repo subpath, so the data does
-not load there. The Pages deploy is therefore best treated as a build/asset
-mirror; the live data site is Vercel.
+this: the Pages workflow sets the environment variable `GHPAGES`, which
+switches Vite's `base` option; the app fetches its data via
+`import.meta.env.BASE_URL` so the same code works on both hosts (and in local
+development).
 
 ### 4. The website itself
 
