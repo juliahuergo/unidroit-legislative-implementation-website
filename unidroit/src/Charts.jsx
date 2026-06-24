@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react"
 import Plotly from "plotly.js-dist-min"
 import createPlotlyComponent from "react-plotly.js/factory"
 const Plot = (createPlotlyComponent.default || createPlotlyComponent)(Plotly)
@@ -14,6 +15,15 @@ function countBy(rows, key){
 }
 
 function Charts({data}) {
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+
+    useEffect(() => {
+        const mq = window.matchMedia("(max-width: 767px)")
+        const handler = e => setIsMobile(e.matches)
+        mq.addEventListener("change", handler)
+        return () => mq.removeEventListener("change", handler)
+    }, [])
+
     const countJurisdiction = countBy(data, row => row.jurisdiction)
     const keysJurisdictions = Object.keys(countJurisdiction)
     const valsJurisdictions = Object.values(countJurisdiction)
@@ -35,7 +45,7 @@ function Charts({data}) {
     const valsSystems = Object.values(countSystems)
 
     return (
-        <div>
+        <div className="overflow-x-auto">
             <Plot
                 data={[{type:"bar", orientation: "h", x: valsJurisdictions, y: keysJurisdictions,
                     hovertemplate: "%{y}<br>Implementations: %{x}<extra></extra>",
@@ -45,13 +55,16 @@ function Charts({data}) {
                         showscale: false
                     }
                 }]}
-                layout={{title: {text: "Jurisdictions with the most connections to Unidroit"},
+                layout={{title: {text: !isMobile ? "Jurisdictions with the most connections to Unidroit"
+                                                : "Jurisdictions v. <br>connections"                               
+                },
                         xaxis: {title: {text: "Number of implementations"}},
                         yaxis: {title: {text: "Jurisdiction", standoff: 20}, categoryorder: "total ascending", automargin: true
-                        }
+                        },
+                        autosize: true
                 }}
                 useResizeHandler
-                style={{ width: "100%", height: "500px" }}
+                style={{ width: "100%", height: isMobile ? "300px" : "500px", minWidth: isMobile ? "0px" : "600px" }}
             />
 
             <Plot
@@ -63,13 +76,16 @@ function Charts({data}) {
                         showscale: false
                     }
                 }]}
-                layout={{title: {text: "Number of implementations per year"},
+                layout={{title: {text: isMobile ? "Year v. implementations"
+                                                : "Number of implementations per year"
+                },
                         xaxis: {title: {text: "Year"}},
                         yaxis: {title: {text: "Number of implementations", standoff: 20}}
                 }}
                 useResizeHandler
-                style={{ width: "100%", height: "500px" }}
+                style={{ width: "100%", height: isMobile ? "300px" : "500px" }}
             />
+
 
             <Plot
                 data={[{type:"bar", orientation: "h", x: valsInstruments, y: keysInstruments,
@@ -80,14 +96,25 @@ function Charts({data}) {
                         showscale: false
                     }
                 }]}
-                layout={{title: {text: "Most implemented Unidroit instruments"},
-                        xaxis: {title: {text: "Number of implementations"}},
-                        yaxis: {title: {text: "Instrument", standoff: 20}, categoryorder: "total ascending", automargin: true
+                layout={{title: {text: isMobile ? "Instruments v. implementations"
+                                                : "Most implemented Unidroit instruments"
+                },
+                        xaxis: {title: {text: isMobile ? "Nº of implementations": "Number of implementations"}},
+                        yaxis: {title: {text: "Instrument", standoff: 20}, 
+                                categoryorder: "total ascending", 
+                                automargin: true,
+                                showticklabels: !isMobile
                         }
                 }}               
                 useResizeHandler
-                style={{ width: "100%", height: "500px" }}
+                style={{ width: "100%", height: isMobile ? "250px" : "500px", minWidth: isMobile ? "0px" : "600px" }}
             />
+
+            {isMobile && (
+                <p className="text-xs text-gray-400 itali text-center mb-4">
+                    Tap a bar to see the Unidroit instrument
+                </p>
+            )}
 
             <Plot
                 data={[{type:"bar", orientation: "h", x: valsPrinciples, y: keysPrinciples,
@@ -98,22 +125,33 @@ function Charts({data}) {
                         showscale: false
                     }
                 }]}
-                layout={{title: {text: "Most implemented Unidroit principles/articles"},
-                        xaxis: {title: {text: "Number of implementations"}},
-                        yaxis: {title: {text: "Principle/Article", standoff: 20}, categoryorder: "total ascending", automargin: true
+                layout={{title: {text: isMobile ? "Principles/Articles <br> v. implementations"
+                                                : "Most implemented Unidroit principles/articles"},
+                        xaxis: {title: {text: isMobile ? "Nº of implementations"
+                                                        : "Number of implementations"}},
+                        yaxis: {title: {text: "Principle/Article", standoff: 20}, 
+                                categoryorder: "total ascending", 
+                                automargin: true,
+                                showticklabels: !isMobile
                         }
                 }}    
                 useResizeHandler
-                style={{ width: "100%", height: "500px" }}
+                style={{ width: "100%", height: isMobile ? "300px" : "500px", minWidth: isMobile ? "0px" : "600px"}}
             />
+
+            {isMobile && (
+                <p className="text-xs text-gray-400 itali text-center mb-4">
+                    Tap a bar to see the Unidroit principle/article
+                </p>
+            )}
 
             <Plot
                 data={[{type: "pie", labels: keysSystems, values: valsSystems,
                     hovertemplate: "%{label}<br>%{value} implementations (%{percent})<extra></extra>"
                 }]}
-                layout={{title: {text: "Legal systems that have implemented Unidroit"}}}
+                layout={{title: {text: isMobile ? "Legal systems that <br> have implemented Unidroit" : "Legal systems that have implemented Unidroit"}}}
                 useResizeHandler
-                style={{ width: "100%", height: "500px" }}
+                style={{ width: "100%", height: isMobile ? "300px" : "500px", minWidth: isMobile ? "0px" : "600px"}}
             />
 
             <Plot
@@ -127,16 +165,16 @@ function Charts({data}) {
                         sizeref: 2* Math.max(...valsJurisdictions) / (40**2),
                         sizemin: 4,
                         colorscale: "Blues", 
-                        showscale: true, 
+                        showscale: !isMobile, 
                         colorbar: {title: {text: "Number of implementations"}}
                     },
                     hovertemplate: "%{location}<br>Implementations: %{customdata}<extra></extra>"
                 }]}
-                layout={{title: {text: "Jurisdictions implementing Unidroit instruments"}, 
+                layout={{title: {text: isMobile ? "Jurisdictions implementing <br> Unidroit instruments" : "Jurisdictions implementing Unidroit instruments"}, 
                         geo: {projection: {type: "natural earth"}}
             }}
                 useResizeHandler
-                style={{ width: "100%", height: "500px" }}
+                style={{ width: "100%", height: isMobile ? "300px" : "500px", minWidth: isMobile ? "0px" : "600px"}}
             />
         </div>
     )

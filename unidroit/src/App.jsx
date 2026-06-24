@@ -54,9 +54,9 @@ function Field({label, value}){
 function ResultCard({row}){
 
   const STATUS_COLOURS = {
-    Commenced: "bg-gray-100 text-gray-800",
-    Ongoing: "bg-yellow-100 text-yellow-800",
-    Enacted: "bg-green-100 text-green-800"
+    Ongoing: "bg-gray-100 text-gray-800",
+    Enacted: "bg-yellow-100 text-yellow-800",
+    Commenced: "bg-green-100 text-green-800"
   }
 
   return (
@@ -117,6 +117,9 @@ function App() {
   //For the visualizations/results tabs
   const [activeTab, setActiveTab] = useState("results")
 
+  //For the phone version
+  const [showFilters, setShowFilters] = useState(false)
+
   //Filter function (texts that pass the filters)
   const caseInsensitiveSearched = searched.toLowerCase()
   const filtered = data.filter(
@@ -136,15 +139,21 @@ function App() {
   )
 
   return (
-    <div className="px-8 pb-8 pt-4">
-      <header className="flex items-center gap-3 px-8 pb-4 pt-0 border-b border-gray-300 mb-5">
-        <img src="/unidroit_logo.png" alt="UNIDROIT" className="h-15"/>
-        <h1 className="text-xl font-semibold ml-3">
+    <div className="px-4 md:px-8 pb-8 pt-4">
+      <header className="flex items-center gap-3 pb-4 pt-0 border-b border-gray-300 mb-5">
+        <img src="/unidroit_logo.png" alt="UNIDROIT" className="h-10 md:h-15"/>
+        <h1 className="text-lg md:text-xl font-semibold ml-3">
           Soft-Law Implementation Database
         </h1>
       </header>
-      <div className="flex gap-6">
-        <aside className="w-72 space-y-4">
+      <button
+        onClick = {() => setShowFilters(!showFilters)}
+        className="md:hidden mb-4 px-4 py-2 border border-gray-300 rounded-md"
+      >
+        {showFilters ? "Hide filters" : "Show filters"}
+      </button>
+      <div className="flex flex-col md:flex-row gap-6">
+        <aside className={`${showFilters ? "block" : "hidden"} md:block w-full md:w-72 space-y-4`}>
           <MultiSelect options={all_jurisdictions} value={jurisdictions} setter={setJurisdictions} label="Jurisdiction"/>
           <MultiSelect options={all_texts} value={texts} setter={setTexts} label="Legislative text"/>
           <MultiSelect options={all_instruments} value={instruments} setter={setInstruments} label="Unidroit instrument"/>
