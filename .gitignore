@@ -1,10 +1,14 @@
 # Dependencias y entornos — se regeneran con npm install / pip install
 node_modules/
 .venv/
+__pycache__/
+*.pyc
 
 # Builds y logs generados
 dist/
+dist-ssr/
 *.log
+*.local
 
 # Config local y secretos
 .env
@@ -20,5 +24,6 @@ pruebas_visualizaciones.ipynb
 .DS_Store
 .vscode/*
 !.vscode/extensions.json
+.idea
 
 unidroit_logos
