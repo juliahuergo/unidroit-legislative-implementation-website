@@ -13,6 +13,11 @@ Mirror (GitHub Pages): https://juliahuergo.github.io/unidroit-legislative-implem
 2. That is all. The website refreshes itself automatically once a day
    (around 07:00 Rome time).
 
+Where possible, also fill in the `perma_link` column in `legislative_texts`
+with a [Perma.cc](https://perma.cc) permanent snapshot of the source document.
+Original `link` URLs can break over time (link rot); the Perma snapshot
+preserves the document, and each card offers it as an archived-copy fallback.
+
 To publish a change immediately instead of waiting for the daily refresh:
 go to the repository's "Actions" tab, open "Refresh data from Google Sheet",
 and press "Run workflow".
@@ -29,7 +34,9 @@ nothing needs to be maintained or restarted.
 The Google Spreadsheet contains three tabs, mirroring the three-table data
 model:
 
-- `legislative_texts` - one row per national legislative act
+- `legislative_texts` - one row per national legislative act (includes a
+  `perma_link` column holding a Perma.cc snapshot of the source, as a
+  link-rot-proof fallback to the original `link`)
 - `unidroit_principles` - one row per UNIDROIT principle / article
 - `merged` - the junction table: one row per connection between a text and a
   principle / article
