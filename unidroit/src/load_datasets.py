@@ -21,10 +21,18 @@ from pathlib import Path
 
 address = 'https://docs.google.com/spreadsheets/d/1xbav3keP8A6UWtpj9vCshVaVPzP_DoE3_qWZaX3yZfA/gviz/tq?tqx=out:csv&sheet='
 
+def strip_strings(df):
+    """Trim leading/trailing whitespace from every text column, so a stray
+    space typed in the spreadsheet doesn't split values that should be equal
+    (e.g. group a principle title or break a filter option)."""
+    str_cols = df.select_dtypes(include='object').columns
+    df[str_cols] = df[str_cols].apply(lambda col: col.str.strip())
+    return df
+
 def main():
-    df_texts = pd.read_csv(address+'legislative_texts')
-    df_unidroit = pd.read_csv(address+'unidroit_principles')
-    df_merged = pd.read_csv(address+'merged')
+    df_texts = strip_strings(pd.read_csv(address+'legislative_texts'))
+    df_unidroit = strip_strings(pd.read_csv(address+'unidroit_principles'))
+    df_merged = strip_strings(pd.read_csv(address+'merged'))
 
     result = df_merged.merge(df_texts, on='text_id').merge(df_unidroit, on='principle_id')
 
