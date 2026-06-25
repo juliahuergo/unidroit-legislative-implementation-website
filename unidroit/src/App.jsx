@@ -81,7 +81,7 @@ function ResultCard({group}){
         <div key={instrument.principle_title} className="mt-3">
           <p className="font-semibold">{instrument.principle_title}</p>
           {instrument.connections.map(conn => (
-            <div key={conn.id} className="mt-2 border-l-2 border-gray-200 pl-3">
+            <div key={conn.id} className="mt-4 border-l-2 border-gray-200 pl-3">
               <p>{conn.subtitle} (Principle {conn["num principle/article"]})</p>
               <Field label="Sections" value={conn.sections}/>
               <Field label="Summary" value={conn.summary}/>
