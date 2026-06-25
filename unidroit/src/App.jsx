@@ -59,6 +59,15 @@ function ResultCard({group}){
     Commenced: "bg-green-100 text-green-800"
   }
 
+  //Within this text, group the connections by UNIDROIT instrument (principle_title)
+  //so each instrument title shows once, with its article connections listed below
+  const byInstrument = Object.values(
+    group.implementations.reduce((acc, impl) => {
+      (acc[impl.principle_title] ??= {principle_title: impl.principle_title, connections: []}).connections.push(impl)
+      return acc
+    }, {})
+  )
+
   return (
     <div className="border border-gray-200 rounded-md p-4">
       <h3 className="text-lg font-bold">{group.text_title}</h3>
@@ -68,16 +77,20 @@ function ResultCard({group}){
       </p>
 
       <h4 className="mt-3 text-sm uppercase text-gray-500">Implements</h4>
-      {group.implementations.map(impl => (
-        <div key={impl.id} className="mt-2 border-l-2 border-gray-200 pl-3">
-          <p>{impl.principle_title}</p>
-          <p>{impl.subtitle} (Principle {impl["num principle/article"]})</p>
-          <Field label="Sections" value={impl.sections}/>
-          <Field label="Summary" value={impl.summary}/>
-          <Field label="Notes" value={impl.notes}/>
+      {byInstrument.map(instrument => (
+        <div key={instrument.principle_title} className="mt-3">
+          <p className="font-semibold">{instrument.principle_title}</p>
+          {instrument.connections.map(conn => (
+            <div key={conn.id} className="mt-2 border-l-2 border-gray-200 pl-3">
+              <p>{conn.subtitle} (Principle {conn["num principle/article"]})</p>
+              <Field label="Sections" value={conn.sections}/>
+              <Field label="Summary" value={conn.summary}/>
+              <Field label="Notes" value={conn.notes}/>
+            </div>
+          ))}
         </div>
       ))}
-    
+
 
       <h4 className="mt-3 text-sm uppercase text-gray-500">Details</h4>
       <Field label= "Promulgating body" value={group.promulgating_body}/>
