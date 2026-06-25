@@ -28,6 +28,11 @@ function Charts({data}) {
     const keysJurisdictions = Object.keys(countJurisdiction)
     const valsJurisdictions = Object.values(countJurisdiction)
 
+    const coordsByJurisdiction = {}
+    for (const row of data){
+        coordsByJurisdiction[row.jurisdiction] = [row.lat, row.lon]
+    }
+
     const countDates = countBy(data, row => row.date.split("/").at(-1))
     const keysYears = Object.keys(countDates)
     const valsYears = Object.values(countDates)
@@ -155,7 +160,9 @@ function Charts({data}) {
             />
 
             <Plot
-                data={[{type: "scattergeo", locationmode: "country names", locations: keysJurisdictions,
+                data={[{type: "scattergeo", 
+                    lat: keysJurisdictions.map(j =>  coordsByJurisdiction[j]?.[0]),
+                    lon: keysJurisdictions.map(j => coordsByJurisdiction[j]?.[1]),
                     customdata: valsJurisdictions,
                     text: keysJurisdictions, 
                     marker: {
@@ -168,7 +175,7 @@ function Charts({data}) {
                         showscale: !isMobile, 
                         colorbar: {title: {text: "Number of implementations"}}
                     },
-                    hovertemplate: "%{location}<br>Implementations: %{customdata}<extra></extra>"
+                    hovertemplate: "%{text}<br>Implementations: %{customdata}<extra></extra>"
                 }]}
                 layout={{title: {text: isMobile ? "Jurisdictions implementing <br> Unidroit instruments" : "Jurisdictions implementing Unidroit instruments"}, 
                         geo: {projection: {type: "natural earth"}}
