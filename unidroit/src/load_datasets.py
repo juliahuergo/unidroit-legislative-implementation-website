@@ -19,7 +19,10 @@ by the Javascript, HTML and CSS files.
 import pandas as pd
 from pathlib import Path
 
-address = 'https://docs.google.com/spreadsheets/d/1xbav3keP8A6UWtpj9vCshVaVPzP_DoE3_qWZaX3yZfA/gviz/tq?tqx=out:csv&sheet='
+address = 'https://docs.google.com/spreadsheets/d/1xbav3keP8A6UWtpj9vCshVaVPzP_DoE3_qWZaX3yZfA/export?format=csv&gid='
+GID_TEXTS = '1250231207'
+GID_PRINCIPLES = '1194899847'
+GID_MERGED = '1278693588'
 
 def strip_strings(df):
     """Trim leading/trailing whitespace from every text column, so a stray
@@ -30,9 +33,9 @@ def strip_strings(df):
     return df
 
 def main():
-    df_texts = strip_strings(pd.read_csv(address+'legislative_texts'))
-    df_unidroit = strip_strings(pd.read_csv(address+'unidroit_principles'))
-    df_merged = strip_strings(pd.read_csv(address+'merged'))
+    df_texts = strip_strings(pd.read_csv(address+GID_TEXTS))
+    df_unidroit = strip_strings(pd.read_csv(address+GID_PRINCIPLES))
+    df_merged = strip_strings(pd.read_csv(address+GID_MERGED))
 
     result = df_merged.merge(df_texts, on='text_id').merge(df_unidroit, on='principle_id')
 
