@@ -172,7 +172,7 @@ function App() {
         <a href="https://www.unidroit.org/" target="_blank" rel="noopener noreferrer"
         className="flex items-center gap-3">
         <img src="/unidroit_logo.png" alt="UNIDROIT" className="h-10 md:h-15"/>
-        <h1 className="text-lg md:text-xl font-semibold ml-3">
+        <h1 className="text-lg md:text-2xl font-semibold ml-3 font-display">
           Soft-Law Implementation Database
         </h1>
         </a>
