@@ -3,9 +3,9 @@ import Plotly from "plotly.js-dist-min"
 import createPlotlyComponent from "react-plotly.js/factory"
 const Plot = (createPlotlyComponent.default || createPlotlyComponent)(Plotly)
 const BLUE_SCALE = [
-    [0,   "#eff6ff"],   // lowest  → very light blue
-    [0.5, "#60a5fa"],   // middle  → medium blue
-    [1,   "#1e3a8a"],   // highest → dark navy
+    [0,   "#eff6ff"],   
+    [0.5, "#60a5fa"],   
+    [1,   "#1e3a8a"],   
 ]
 
 function countBy(rows, key){
