@@ -2,6 +2,11 @@ import { useState, useEffect } from "react"
 import Plotly from "plotly.js-dist-min"
 import createPlotlyComponent from "react-plotly.js/factory"
 const Plot = (createPlotlyComponent.default || createPlotlyComponent)(Plotly)
+const BLUE_SCALE = [
+    [0,   "#eff6ff"],   // lowest  → very light blue
+    [0.5, "#60a5fa"],   // middle  → medium blue
+    [1,   "#1e3a8a"],   // highest → dark navy
+]
 
 function countBy(rows, key){
     const counts = {}
@@ -49,6 +54,7 @@ function Charts({data}) {
     const keysSystems = Object.keys(countSystems)
     const valsSystems = Object.values(countSystems)
 
+
     return (
         <div className="overflow-x-auto">
             <Plot
@@ -56,7 +62,7 @@ function Charts({data}) {
                     hovertemplate: "%{y}<br>Implementations: %{x}<extra></extra>",
                     marker:{
                         color: valsJurisdictions,
-                        colorscale: "Blues",
+                        colorscale: "BLUE_SCALE",
                         showscale: false
                     }
                 }]}
@@ -77,7 +83,7 @@ function Charts({data}) {
                     hovertemplate: "Year: %{x}<br>Implementations: %{y}<extra></extra>",
                     marker:{
                         color: valsYears,
-                        colorscale: "Blues",
+                        colorscale: "BLUE_SCALE",
                         showscale: false
                     }
                 }]}
@@ -97,7 +103,7 @@ function Charts({data}) {
                     hovertemplate: "%{y}<br>Implementations: %{x}<extra></extra>",
                     marker:{
                         color: valsInstruments,
-                        colorscale: "Blues",
+                        colorscale: "BLUE_SCALE",
                         showscale: false
                     }
                 }]}
@@ -126,7 +132,7 @@ function Charts({data}) {
                     hovertemplate: "%{y}<br>Implementations: %{x}<extra></extra>",
                     marker:{
                         color: valsPrinciples,
-                        colorscale: "Blues",
+                        colorscale: "BLUE_SCALE",
                         showscale: false
                     }
                 }]}
@@ -171,7 +177,7 @@ function Charts({data}) {
                         sizemode: "area", 
                         sizeref: 2* Math.max(...valsJurisdictions) / (40**2),
                         sizemin: 4,
-                        colorscale: "Blues", 
+                        colorscale: "BLUE_SCALE", 
                         showscale: !isMobile, 
                         colorbar: {title: {text: "Number of implementations"}}
                     },
