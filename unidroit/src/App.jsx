@@ -190,6 +190,10 @@ function App() {
         </h1>
         </a>
       </header>
+      <p className="text-lg text-gray-600 mb-5 max-w-4xl">
+        Catalogue of international legislative implementation of UNIDROIT's soft-law instruments.
+      </p>
+      
       <button
         onClick = {() => setShowFilters(!showFilters)}
         className="md:hidden mb-4 px-4 py-2 border border-gray-300 rounded-md"
