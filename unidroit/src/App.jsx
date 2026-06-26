@@ -59,8 +59,6 @@ function ResultCard({group}){
     Commenced: "bg-green-100 text-green-800"
   }
 
-  //Within this text, group the connections by UNIDROIT instrument (principle_title)
-  //so each instrument title shows once, with its article connections listed below
   const byInstrument = Object.values(
     group.implementations.reduce((acc, impl) => {
       (acc[impl.principle_title] ??= {principle_title: impl.principle_title, connections: []}).connections.push(impl)
@@ -74,6 +72,13 @@ function ResultCard({group}){
       <span className={`inline-block mt-2 ml-2 px-2 py-0.5 text-xs rounded ${STATUS_COLOURS[group.status] || "bg-gray-100"}`}>{group.status}</span>
       <p className="text-sm text-gray-600 mt-2">
         {group.jurisdiction} · {group.legal_system} · {group.date}
+      </p>
+
+      <p className="text-xs text-gray-500 mt-1">
+        Implements {group.implementations.length} {" "}
+        {group.implementations.length === 1 ? "principle/article" : "principles/articles"} across {" "}
+        {byInstrument.length} {" "}
+        {byInstrument.length === 1 ? "instrument" : "instruments"} 
       </p>
 
       <h4 className="mt-3 text-sm uppercase text-gray-500">Implements</h4>
