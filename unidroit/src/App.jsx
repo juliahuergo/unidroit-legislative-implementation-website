@@ -140,6 +140,19 @@ function App() {
   //For the phone version
   const [showFilters, setShowFilters] = useState(false)
 
+  function clearFilters(){
+    setJurisdictions([]);
+    setTexts([]);
+    setInstruments([]);
+    setPrinciples([]);
+    setLanguages([]);
+    setStatuses([]);
+    setSystems([]);
+    setSearched("");
+    setFromYear("");
+    setToYear("");
+  }
+
   //Filter function (texts that pass the filters)
   const caseInsensitiveSearched = searched.toLowerCase()
   const filtered = data.filter(
@@ -185,6 +198,7 @@ function App() {
       </button>
       <div className="flex flex-col md:flex-row gap-6">
         <aside className={`${showFilters ? "block" : "hidden"} md:block w-full md:w-72 space-y-4`}>
+          <button onClick={clearFilters} className="text-sm text-blue-600 underline">Clear all filters</button>
           <MultiSelect options={all_jurisdictions} value={jurisdictions} setter={setJurisdictions} label="Jurisdiction"/>
           <MultiSelect options={all_texts} value={texts} setter={setTexts} label="Legislative text"/>
           <MultiSelect options={all_instruments} value={instruments} setter={setInstruments} label="Unidroit instrument"/>
@@ -251,15 +265,17 @@ function App() {
 
           <div className="border border-gray-300 border-t-0 p-4">
             {activeTab === "results" && (
-              grouped.length === 0 
-            ? (<p className="text-gray-500">No results match these filters.</p>)
-            : (
-              <>
-                <p className="text-sm text-gray-500 mb-4">
-                  {grouped.length} legislative {grouped.length === 1 ? "text": "texts"} · {filtered.length} connections
-                </p>
-                {grouped.map(group => <ResultCard key={group.id} group={group}/>)}
-              </>
+              data.length === 0 
+              ? (<p className="text-gray-500">Loading...</p>)
+              : grouped.length === 0
+                ? (<p className="text-gray-500">No results match these filters.</p>)
+                : (
+                  <>
+                    <p className="text-sm text-gray-500 mb-4">
+                      {grouped.length} legislative {grouped.length === 1 ? "text": "texts"} · {filtered.length} connections
+                    </p>
+                    {grouped.map(group => <ResultCard key={group.id} group={group}/>)}
+                  </>
             ))}
             {activeTab === "visualizations" && (<Charts data={filtered}/>)}
           </div>
