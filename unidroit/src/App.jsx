@@ -251,13 +251,16 @@ function App() {
 
           <div className="border border-gray-300 border-t-0 p-4">
             {activeTab === "results" && (
+              grouped.length === 0 
+            ? (<p className="text-gray-500">No results match these filters.</p>)
+            : (
               <>
                 <p className="text-sm text-gray-500 mb-4">
                   {grouped.length} legislative {grouped.length === 1 ? "text": "texts"} · {filtered.length} connections
                 </p>
                 {grouped.map(group => <ResultCard key={group.id} group={group}/>)}
               </>
-            )}
+            ))}
             {activeTab === "visualizations" && (<Charts data={filtered}/>)}
           </div>
         </main>
