@@ -62,7 +62,7 @@ function Charts({data}) {
                     hovertemplate: "%{y}<br>Implementations: %{x}<extra></extra>",
                     marker:{
                         color: valsJurisdictions,
-                        colorscale: "BLUE_SCALE",
+                        colorscale: BLUE_SCALE,
                         showscale: false
                     }
                 }]}
@@ -83,7 +83,7 @@ function Charts({data}) {
                     hovertemplate: "Year: %{x}<br>Implementations: %{y}<extra></extra>",
                     marker:{
                         color: valsYears,
-                        colorscale: "BLUE_SCALE",
+                        colorscale: BLUE_SCALE,
                         showscale: false
                     }
                 }]}
@@ -103,7 +103,7 @@ function Charts({data}) {
                     hovertemplate: "%{y}<br>Implementations: %{x}<extra></extra>",
                     marker:{
                         color: valsInstruments,
-                        colorscale: "BLUE_SCALE",
+                        colorscale: BLUE_SCALE,
                         showscale: false
                     }
                 }]}
@@ -122,7 +122,7 @@ function Charts({data}) {
             />
 
             {isMobile && (
-                <p className="text-xs text-gray-400 itali text-center mb-4">
+                <p className="text-xs text-gray-400 italic text-center mb-4">
                     Tap a bar to see the Unidroit instrument
                 </p>
             )}
@@ -132,7 +132,7 @@ function Charts({data}) {
                     hovertemplate: "%{y}<br>Implementations: %{x}<extra></extra>",
                     marker:{
                         color: valsPrinciples,
-                        colorscale: "BLUE_SCALE",
+                        colorscale: BLUE_SCALE,
                         showscale: false
                     }
                 }]}
@@ -151,7 +151,7 @@ function Charts({data}) {
             />
 
             {isMobile && (
-                <p className="text-xs text-gray-400 itali text-center mb-4">
+                <p className="text-xs text-gray-400 italic text-center mb-4">
                     Tap a bar to see the Unidroit principle/article
                 </p>
             )}
@@ -177,7 +177,7 @@ function Charts({data}) {
                         sizemode: "area", 
                         sizeref: 2* Math.max(...valsJurisdictions) / (40**2),
                         sizemin: 4,
-                        colorscale: "BLUE_SCALE", 
+                        colorscale: BLUE_SCALE, 
                         showscale: !isMobile, 
                         colorbar: {title: {text: "Number of implementations"}}
                     },
