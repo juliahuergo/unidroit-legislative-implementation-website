@@ -344,53 +344,54 @@ function App() {
 
           <div className="border border-gray-300 border-t-0 p-4">
             {activeTab === "results" && (
-              data.length === 0 
-              ? (<p className="text-gray-500">Loading...</p>)
-              : grouped.length === 0
-                ? (<p className="text-gray-500">No results match these filters.</p>)
-                : (
-                  <>
-                  {chips.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {chips.map(chip => (
-                        <button
-                          key={chip.key}
-                          onClick={chip.remove}
-                          className="inline-flex items-center gap-1 rounded-full bg-white ring-1 ring-black/10 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          {chip.text}
-                          <span className="text-gray-400">✕</span>
-                        </button>
-                      ))}
-                    </div>
-                )}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5">
-                      {stats.map(s => (
-                        <div key={s.label} className="rounded-lg bg-white ring-1 ring-black/5 shadow-sm px-4 py-2">
-                        <div className="text-lg font-semibold text-gray-900">{s.value}</div>
-                        <div className="text-xs uppercase tracking-wide text-gray-500">{s.label}</div>
-                        </div>
-                      ))
-                      }
-                    </div>
-
-                    <label className="flex items-center gap-2 text-sm text-gray-600 mb-4">
-                      Sort by
-                      <select 
-                        value={sortBy} 
-                        onChange={e => setSortBy(e.target.value)}
-                        className="border border-gray-300 rounded-md px-2 py-1 bg-white"
+              <>
+                {chips.length > 0 && (
+                  <div className="flex flex-wrap gap-2 mb-4">
+                    {chips.map(chip => (
+                      <button
+                        key={chip.key}
+                        onClick={chip.remove}
+                        className="inline-flex items-center gap-1 rounded-full bg-white ring-1 ring-black/10 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
                       >
-                        <option value="year-desc">Year (newest)</option>
-                        <option value="year-asc">Year (oldest)</option>
-                        <option value="jur-asc">Jurisdiction (A-Z)</option>
-                        <option value="conn-desc">Most connections</option>
-                      </select>
+                        {chip.text}
+                        <span className="text-gray-400">✕</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {data.length === 0
+                  ? (<p className="text-gray-500">Loading...</p>)
+                  : grouped.length === 0
+                    ? (<p className="text-gray-500">No results match these filters.</p>)
+                    : (
+                      <>
+                        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5">
+                          {stats.map(s => (
+                            <div key={s.label} className="rounded-lg bg-white ring-1 ring-black/5 shadow-sm px-4 py-2">
+                              <div className="text-lg font-semibold text-gray-900">{s.value}</div>
+                              <div className="text-xs uppercase tracking-wide text-gray-500">{s.label}</div>
+                            </div>
+                          ))}
+                        </div>
 
-                    </label>
-                    {sorted.map(group => <ResultCard key={group.id} group={group}/>)}
-                  </>
-            ))}
+                        <label className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+                          Sort by
+                          <select
+                            value={sortBy}
+                            onChange={e => setSortBy(e.target.value)}
+                            className="border border-gray-300 rounded-md px-2 py-1 bg-white"
+                          >
+                            <option value="year-desc">Year (newest)</option>
+                            <option value="year-asc">Year (oldest)</option>
+                            <option value="jur-asc">Jurisdiction (A-Z)</option>
+                            <option value="conn-desc">Most connections</option>
+                          </select>
+                        </label>
+                        {sorted.map(group => <ResultCard key={group.id} group={group}/>)}
+                      </>
+                    )}
+              </>
+            )}
             {activeTab === "visualizations" && (<Charts data={filtered}/>)}
           </div>
         </main>
