@@ -3,9 +3,9 @@ import Plotly from "plotly.js-dist-min"
 import createPlotlyComponent from "react-plotly.js/factory"
 const Plot = (createPlotlyComponent.default || createPlotlyComponent)(Plotly)
 const BLUE_SCALE = [
-    [0,   "#eff6ff"],   
-    [0.5, "#60a5fa"],   
-    [1,   "#1e3a8a"],   
+    [0,   "#cbe3e8"],   
+    [0.5, "#3a8ca0"],   
+    [1,   "#014154"],   
 ]
 
 function countBy(rows, key){
@@ -124,14 +124,14 @@ function Charts({data}) {
                             x: leftList.map(n => leftPos[n][0]), y: leftList.map(n => leftPos[n][1]),
                             text: leftList.map(short), customdata: leftList.map(n => leftDegree[n]),
                             textposition: "middle left", textfont: {size: 10},
-                            marker: {size: leftList.map(n => 10 + leftDegree[n] * 3), color: "#1e3a8a"},
+                            marker: {size: leftList.map(n => 10 + leftDegree[n] * 3), color: "#014154"},
                             hovertemplate: "%{text}<br>Connections:%{customdata}<extra></extra>"
                         },
                         {type: "scatter", mode: "markers" + (isMobile ? "" : "+text"),
                             x: rightList.map(n => rightPos[n][0]), y: rightList.map(n => rightPos[n][1]),
                             text: rightList.map(short), customdata: rightList.map(n => rightDegree[n]),
                             textposition: "middle right", textfont: {size: 10},
-                            marker: {size: rightList.map(n => 8 + rightDegree[n] * 3), color: "#60a5fa"},
+                            marker: {size: rightList.map(n => 8 + rightDegree[n] * 3), color: "#3a8ca0"},
                             hovertemplate: "%{text}<br>Connections:%{customdata}<extra></extra>"
                         }
                     ]}

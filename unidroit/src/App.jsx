@@ -17,7 +17,7 @@ function MultiSelect({options, setter, value, label}){
 }
 
 function CheckBoxGroup({options, setter, value, label}){
-  return(
+  return (
     <div>
       <p>{label}</p>
       {options.map(option =>
@@ -54,9 +54,9 @@ function Field({label, value}){
 function ResultCard({group}){
 
   const STATUS_COLOURS = {
-    Ongoing: "bg-gray-100 text-gray-800",
-    Enacted: "bg-yellow-100 text-yellow-800",
-    Commenced: "bg-green-100 text-green-800"
+    Ongoing: "bg-slate-100 text-slate-800",
+    Enacted: "bg-amber-100 text-amber-800",
+    Commenced: "bg-emerald-100 text-emerald-800"
   }
 
   const byInstrument = Object.values(
@@ -67,26 +67,26 @@ function ResultCard({group}){
   )
 
   return (
-    <div className="border border-gray-200 rounded-md p-4">
+    <div className="bg-white rounded-md p-4 shadow-sm ring-1 ring-slate-900/5 hover:shadow-md transition">
       <h3 className="text-lg font-bold">{group.text_title}</h3>
-      <span className={`inline-block mt-2 ml-2 px-2 py-0.5 text-xs rounded ${STATUS_COLOURS[group.status] || "bg-gray-100"}`}>{group.status}</span>
-      <p className="text-sm text-gray-600 mt-2">
+      <span className={`inline-block mt-2 ml-2 px-2 py-0.5 text-xs rounded ${STATUS_COLOURS[group.status] || "bg-slate-100"}`}>{group.status}</span>
+      <p className="text-sm text-slate-600 mt-2">
         {group.jurisdiction} · {group.legal_system} · {group.date}
       </p>
 
-      <p className="text-xs text-gray-500 mt-1">
+      <p className="text-xs text-slate-500 mt-1">
         Implements {group.implementations.length} {" "}
         {group.implementations.length === 1 ? "principle/article" : "principles/articles"} across {" "}
         {byInstrument.length} {" "}
         {byInstrument.length === 1 ? "instrument" : "instruments"} 
       </p>
 
-      <h4 className="mt-3 text-sm uppercase text-gray-500">Implements</h4>
+      <h4 className="mt-3 text-sm uppercase text-slate-500">Implements</h4>
       {byInstrument.map(instrument => (
         <div key={instrument.principle_title} className="mt-3">
           <p className="font-semibold">{instrument.principle_title}</p>
           {instrument.connections.map(conn => (
-            <div key={conn.id} className="mt-4 border-l-2 border-gray-200 pl-3">
+            <div key={conn.id} className="mt-4 border-l-2 border-slate-200 pl-3">
               <p>{conn.subtitle} (Principle {conn["num principle/article"]})</p>
               <Field label="Sections" value={conn.sections}/>
               <Field label="Summary" value={conn.summary}/>
@@ -97,7 +97,7 @@ function ResultCard({group}){
       ))}
 
 
-      <h4 className="mt-3 text-sm uppercase text-gray-500">Details</h4>
+      <h4 className="mt-3 text-sm uppercase text-slate-500">Details</h4>
       <Field label= "Promulgating body" value={group.promulgating_body}/>
       <Field label= "Language of text" value={group.text_language}/>
       <Field label= "States involved" value={group.states_usa}/>
@@ -255,8 +255,8 @@ function App() {
   if (toYear) chips.push({key: "to", text: `To ${toYear}`, remove: () => setToYear("")})
 
   return (
-    <div className="px-4 md:px-8 pb-8 pt-4">
-      <header className="flex items-center gap-3 pb-4 pt-0 border-b border-gray-300 mb-5">
+    <div className="px-4 md:px-8 pb-8 pt-4 bg-slate-50 min-h-screen">
+      <header className="flex items-center gap-3 pb-4 pt-0 border-b border-slate-300 mb-5">
         <a href="https://www.unidroit.org/" target="_blank" rel="noopener noreferrer"
         className="flex items-center gap-3">
         <img src="/unidroit_logo.png" alt="UNIDROIT" className="h-10 md:h-15"/>
@@ -265,19 +265,19 @@ function App() {
         </h1>
         </a>
       </header>
-      <p className="text-lg text-gray-600 mb-5 max-w-4xl">
+      <p className="text-lg text-slate-600 mb-5 max-w-4xl">
         Catalogue of international legislative implementation of UNIDROIT's soft-law instruments.
       </p>
       
       <button
         onClick = {() => setShowFilters(!showFilters)}
-        className="md:hidden mb-4 px-4 py-2 border border-gray-300 rounded-md"
+        className="md:hidden mb-4 px-4 py-2 border border-slate-300 rounded-md"
       >
         {showFilters ? "Hide filters" : "Show filters"}
       </button>
       <div className="flex flex-col md:flex-row gap-6">
         <aside className={`${showFilters ? "block" : "hidden"} md:block w-full md:w-72 space-y-4`}>
-          <button onClick={clearFilters} className="text-sm text-blue-600 underline">Clear all filters</button>
+          <button onClick={clearFilters} className="text-sm text-accent underline">Clear all filters</button>
           <MultiSelect options={all_jurisdictions} value={jurisdictions} setter={setJurisdictions} label="Jurisdiction"/>
           <MultiSelect options={all_texts} value={texts} setter={setTexts} label="Legislative text"/>
           <MultiSelect options={all_instruments} value={instruments} setter={setInstruments} label="Unidroit instrument"/>
@@ -294,7 +294,7 @@ function App() {
               value={fromYear}
               onChange={e => setFromYear(e.target.value)}
               placeholder="From year"
-              className="border border-gray-300 rounded-md px-2 py-1"
+              className="border border-slate-300 rounded-md px-2 py-1"
             />
 
             <input
@@ -302,7 +302,7 @@ function App() {
               value={toYear}
               onChange={e => setToYear(e.target.value)}
               placeholder="To year"
-              className="border border-gray-300 rounded-md px-2 py-1"
+              className="border border-slate-300 rounded-md px-2 py-1"
             />
           </div>
           
@@ -314,16 +314,16 @@ function App() {
             value={searched}
             onChange={e => setSearched(e.target.value)}
             placeholder="Search by jurisdiction, legislative text, UNIDROIT principle..."
-            className="w-full mb-6 px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full mb-6 px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent"
           />
 
-          <div className="flex border-b border-gray-300">
+          <div className="flex border-b border-slate-300">
             <button
               onClick={() => setActiveTab("results")}
               className={"px-4 py-2 rounded-t-md " +
                 (activeTab === "results"
-                  ? "border border-b-0 border-gray-300 -mb-px bg-white"
-                  : "border border-transparent text-gray-500"
+                  ? "border border-b-0 border-slate-300 -mb-px bg-white"
+                  : "border border-transparent text-slate-500"
                 )
               }
             >
@@ -333,8 +333,8 @@ function App() {
               onClick={() => setActiveTab("visualizations")}
               className={"px-4 py-2 rounded-t-md " +
                 (activeTab === "visualizations"
-                  ? "border border-b-0 border-gray-300 -mb-px bg-white"
-                  : "border border-transparent text-gray-500"
+                  ? "border border-b-0 border-slate-300 -mb-px bg-white"
+                  : "border border-transparent text-slate-500"
                 )
               }
             >
@@ -342,7 +342,7 @@ function App() {
             </button>
           </div>
 
-          <div className="border border-gray-300 border-t-0 p-4">
+          <div className="border border-slate-300 border-t-0 p-4">
             {activeTab === "results" && (
               <>
                 {chips.length > 0 && (
@@ -351,35 +351,35 @@ function App() {
                       <button
                         key={chip.key}
                         onClick={chip.remove}
-                        className="inline-flex items-center gap-1 rounded-full bg-white ring-1 ring-black/10 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+                        className="inline-flex items-center gap-1 rounded-full bg-white ring-1 ring-black/10 px-3 py-1 text-sm text-slate-700 hover:bg-slate-100"
                       >
                         {chip.text}
-                        <span className="text-gray-400">✕</span>
+                        <span className="text-slate-400">✕</span>
                       </button>
                     ))}
                   </div>
                 )}
                 {data.length === 0
-                  ? (<p className="text-gray-500">Loading...</p>)
+                  ? (<p className="text-slate-500">Loading...</p>)
                   : grouped.length === 0
-                    ? (<p className="text-gray-500">No results match these filters.</p>)
+                    ? (<p className="text-slate-500">No results match these filters.</p>)
                     : (
                       <>
                         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5">
                           {stats.map(s => (
                             <div key={s.label} className="rounded-lg bg-white ring-1 ring-black/5 shadow-sm px-4 py-2">
-                              <div className="text-lg font-semibold text-gray-900">{s.value}</div>
-                              <div className="text-xs uppercase tracking-wide text-gray-500">{s.label}</div>
+                              <div className="text-lg font-semibold text-slate-900">{s.value}</div>
+                              <div className="text-xs uppercase tracking-wide text-slate-500">{s.label}</div>
                             </div>
                           ))}
                         </div>
 
-                        <label className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+                        <label className="flex items-center gap-2 text-sm text-slate-600 mb-4">
                           Sort by
                           <select
                             value={sortBy}
                             onChange={e => setSortBy(e.target.value)}
-                            className="border border-gray-300 rounded-md px-2 py-1 bg-white"
+                            className="border border-slate-300 rounded-md px-2 py-1 bg-white"
                           >
                             <option value="year-desc">Year (newest)</option>
                             <option value="year-asc">Year (oldest)</option>

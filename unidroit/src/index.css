@@ -3,4 +3,6 @@
 @theme {
     --font-sans: "Hanken Grotesk", sans-serif;
     --font-display: "GFS Didot", sans-serif;
+    --color-accent: #014154;
+    --color-accent-hover: #025c75;
 }
