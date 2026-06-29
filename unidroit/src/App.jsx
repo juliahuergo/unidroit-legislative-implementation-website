@@ -5,7 +5,7 @@ import Select from "react-select"
 function MultiSelect({options, setter, value, label}){
   return(
     <label className="block"> 
-      <span className="block mb-1.5">{label}</span> 
+      <span className="block mb-1.5 font-bold text-sm">{label}</span> 
       <Select 
         isMulti
         options={options.map(o => ({value: o, label: o}))}
@@ -19,7 +19,7 @@ function MultiSelect({options, setter, value, label}){
 function CheckBoxGroup({options, setter, value, label}){
   return (
     <div>
-      <p>{label}</p>
+      <p className="font-bold text-sm">{label}</p>
       {options.map(option =>
         (
           <label className="block" key={option}>
@@ -288,7 +288,7 @@ function App() {
           <CheckBoxGroup options={all_systems} value={systems} setter={setSystems} label="Legal system"/>
 
           <div>
-            <p className="mb-1.5">Date</p>
+            <p className="mb-1.5 font-bold text-sm">Date</p>
             <input
               type="number"
               value={fromYear}
