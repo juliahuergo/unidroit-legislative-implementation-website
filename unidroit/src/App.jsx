@@ -110,7 +110,8 @@ function ResultCard({group}){
 }
 
 function App() {
-  //We define the variables we'll then display
+  
+  const params = new URLSearchParams(window.location.search)
 
   //All the objects are stored in data
   const [data, setData] = useState([])
@@ -125,19 +126,20 @@ function App() {
   const all_statuses = [...new Set(data.map(row => row.status))]
   const all_systems = [...new Set(data.map(row => row.legal_system))]
 
- 
+  
 
   //FROM the filters (the ones that the user chooses)
-  const [jurisdictions, setJurisdictions] = useState([])
-  const [texts, setTexts] = useState([])
-  const [instruments, setInstruments] = useState([])
-  const [principles, setPrinciples] = useState([])
-  const [languages, setLanguages] = useState([])
-  const [statuses, setStatuses] = useState([])
-  const [systems, setSystems] = useState([])
-  const [searched, setSearched] = useState("")
-  const [fromYear, setFromYear] = useState("")
-  const [toYear, setToYear] = useState("")
+  const [jurisdictions, setJurisdictions] = useState(() => params.getAll("jurisdiction"))
+  const [texts, setTexts] = useState(() => params.getAll("text"))
+  const [instruments, setInstruments] = useState(() => params.getAll("instrument"))
+  const [principles, setPrinciples] = useState(() => params.getAll("principle"))
+  const [languages, setLanguages] = useState(() => params.getAll("language"))
+  const [statuses, setStatuses] = useState(() => params.getAll("status"))
+  const [systems, setSystems] = useState(() => params.getAll("system"))
+  const [searched, setSearched] = useState(() => params.get("q") || "")
+  const [fromYear, setFromYear] = useState(() => params.get("from") || "")
+  const [toYear, setToYear] = useState(() => params.get("to") || "")
+  const [sortBy, setSortBy] = useState(() => params.get("sort") || "year-desc")
 
   //For the visualizations/results tabs
   const [activeTab, setActiveTab] = useState("results")
@@ -158,6 +160,25 @@ function App() {
     setToYear("");
   }
 
+  useEffect(() => {
+    const p = new URLSearchParams()
+    jurisdictions.forEach(v => p.append("jurisdiction", v))
+    texts.forEach(v => p.append("text", v))
+    instruments.forEach(v => p.append("instrument", v))
+    principles.forEach(v => p.append("principle", v))
+    languages.forEach(v => p.append("language", v))
+    statuses.forEach(v => p.append("status", v))
+    systems.forEach(v => p.append("system", v))
+    if (searched) p.set("q", searched)
+    if (fromYear) p.set("from", fromYear)
+    if (toYear) p.set("to", toYear)
+    if (sortBy !== "year-desc") p.set("sort", sortBy)
+
+    const qs = p.toString()
+    window.history.replaceState(null, "", qs ? `?${qs}` : window.location.pathname)},
+    [jurisdictions, texts, instruments, principles, languages, statuses, systems, searched, fromYear, toYear, sortBy]
+  )
+
   //Filter function (texts that pass the filters)
   const caseInsensitiveSearched = searched.toLowerCase()
   const filtered = data.filter(
@@ -176,6 +197,7 @@ function App() {
       (toYear === "" || row.date.split("/").at(-1) <= Number(toYear))
   )
 
+
   const grouped = Object.values(
     filtered.reduce((acc, row) => {
       (acc[row.text_id] ??= {...row,
@@ -183,6 +205,54 @@ function App() {
       }).implementations.push(row)
         return acc
     }, {}))
+
+  const year = g => Number(g.date.split("/").at(-1))
+
+  const sorted = [...grouped].sort((a, b) => {
+    switch (sortBy) {
+      case "year-desc": return year(b) - year(a)
+      case "year-asc": return year(a) - year(b)
+      case "jur-asc": return a.jurisdiction.localeCompare(b.jurisdiction)
+      case "conn-desc": return b.implementations.length - a.implementations.length 
+      default: return 0
+    }
+  })
+
+  const distinctJurisdictions = new Set(filtered.map(r => r.jurisdiction)).size
+  const distinctInstruments = new Set(filtered.map(r => r.principle_title)).size
+
+
+  const stats = [
+    {label: "Legislative texts", value: grouped.length},
+    {label: "Jurisdictions", value: distinctJurisdictions},
+    {label: "Instruments", value: distinctInstruments},
+    {label: "Connections", value: filtered.length}
+  ]
+
+  const arrayFilters = [
+    { label: "Jurisdiction",  values: jurisdictions, setter: setJurisdictions },
+    { label: "Text",          values: texts,         setter: setTexts },
+    { label: "Instrument",    values: instruments,   setter: setInstruments },
+    { label: "Principle",     values: principles,    setter: setPrinciples },
+    { label: "Language",      values: languages,     setter: setLanguages },
+    { label: "Status",        values: statuses,      setter: setStatuses },
+    { label: "Legal system",  values: systems,       setter: setSystems },
+  ]
+
+  const chips = []
+  for (const f of arrayFilters) {
+    for (const v of f.values) {
+      chips.push({
+        key: `${f.label}-${v}`,
+        text: `${f.label}: ${v}`,
+        remove: () => f.setter(f.values.filter(x => x !== v)),
+      })
+    }
+  }
+
+  if (searched) chips.push({key: "search", text: `Search: "${searched}"`, remove: () => setSearched("")})
+  if (fromYear) chips.push({key: "from", text: `From ${fromYear}`, remove: () => setFromYear("")})
+  if (toYear) chips.push({key: "to", text: `To ${toYear}`, remove: () => setToYear("")})
 
   return (
     <div className="px-4 md:px-8 pb-8 pt-4">
@@ -280,10 +350,45 @@ function App() {
                 ? (<p className="text-gray-500">No results match these filters.</p>)
                 : (
                   <>
-                    <p className="text-sm text-gray-500 mb-4">
-                      {grouped.length} legislative {grouped.length === 1 ? "text": "texts"} · {filtered.length} connections
-                    </p>
-                    {grouped.map(group => <ResultCard key={group.id} group={group}/>)}
+                  {chips.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {chips.map(chip => (
+                        <button
+                          key={chip.key}
+                          onClick={chip.remove}
+                          className="inline-flex items-center gap-1 rounded-full bg-white ring-1 ring-black/10 px-3 py-1 text-sm text-gray-700 hover:bg-gray-100"
+                        >
+                          {chip.text}
+                          <span className="text-gray-400">✕</span>
+                        </button>
+                      ))}
+                    </div>
+                )}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-5">
+                      {stats.map(s => (
+                        <div key={s.label} className="rounded-lg bg-white ring-1 ring-black/5 shadow-sm px-4 py-2">
+                        <div className="text-lg font-semibold text-gray-900">{s.value}</div>
+                        <div className="text-xs uppercase tracking-wide text-gray-500">{s.label}</div>
+                        </div>
+                      ))
+                      }
+                    </div>
+
+                    <label className="flex items-center gap-2 text-sm text-gray-600 mb-4">
+                      Sort by
+                      <select 
+                        value={sortBy} 
+                        onChange={e => setSortBy(e.target.value)}
+                        className="border border-gray-300 rounded-md px-2 py-1 bg-white"
+                      >
+                        <option value="year-desc">Year (newest)</option>
+                        <option value="year-asc">Year (oldest)</option>
+                        <option value="jur-asc">Jurisdiction (A-Z)</option>
+                        <option value="conn-desc">Most connections</option>
+                      </select>
+
+                    </label>
+                    {sorted.map(group => <ResultCard key={group.id} group={group}/>)}
                   </>
             ))}
             {activeTab === "visualizations" && (<Charts data={filtered}/>)}

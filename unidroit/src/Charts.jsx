@@ -3,9 +3,9 @@ import Plotly from "plotly.js-dist-min"
 import createPlotlyComponent from "react-plotly.js/factory"
 const Plot = (createPlotlyComponent.default || createPlotlyComponent)(Plotly)
 const BLUE_SCALE = [
-    [0,   "#eff6ff"],   // lowest  → very light blue
-    [0.5, "#60a5fa"],   // middle  → medium blue
-    [1,   "#1e3a8a"],   // highest → dark navy
+    [0,   "#eff6ff"],   
+    [0.5, "#60a5fa"],   
+    [1,   "#1e3a8a"],   
 ]
 
 function countBy(rows, key){
@@ -19,8 +19,43 @@ function countBy(rows, key){
     )
 }
 
+
 function Charts({data}) {
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+
+    const FIELDS = {
+        instrument:   { label: "Instrument",        get: r => r.principle_title },
+        principle:    { label: "Principle/Article", get: r => r.subtitle },
+        text:         { label: "Legislative text",  get: r => r.text_title },
+        jurisdiction: { label: "Jurisdiction",      get: r => r.jurisdiction },
+    }
+
+    const [leftField, setLeftField] = useState("instrument")
+    const [rightField, setRightField] = useState("text")
+
+    const leftGet = FIELDS[leftField].get
+    const rightGet = FIELDS[rightField].get
+
+    const leftList = [...new Set(data.map(leftGet))]
+    const rightList = [...new Set(data.map(rightGet))]
+
+    const yPos = (i, n) => (n <= 1 ? 0.5 : i / (n - 1))
+    const leftPos = {}, rightPos = {}
+    leftList.forEach((n, i) => { leftPos[n] = [0, yPos(i, leftList.length)] })
+    rightList.forEach((n, i) => { rightPos[n] = [1, yPos(i, rightList.length)] })
+
+    const pairs = [...new Set(data.map(r => leftGet(r) + "|||" + rightGet(r)))]
+
+    const edgeX = [], edgeY = []
+    for (const pair of pairs) {
+        const [l, rr] = pair.split("|||")
+        edgeX.push(leftPos[l][0], rightPos[rr][0], null)
+        edgeY.push(leftPos[l][1], rightPos[rr][1], null)
+    }
+
+    const leftDegree = countBy(data, leftGet)
+    const rightDegree = countBy(data, rightGet)
+    const short = s => (s.length > 32 ? s.slice(0, 30) + "..." : s)
 
     useEffect(() => {
         const mq = window.matchMedia("(max-width: 767px)")
@@ -57,6 +92,62 @@ function Charts({data}) {
 
     return (
         <div className="overflow-x-auto">
+            <div className="flex flex-wrap items-center gap-4 mt-6 mb-2 text-sm text-gray-600">
+                <label className="flex items-center gap-2">
+                    Left 
+                    <select value={leftField} onChange={e => setLeftField(e.target.value)}
+                        className="border border-gray-300 rounded-md px-2 py-1 bg-white">
+                            {Object.entries(FIELDS).map(([k, f]) => <option key={k} value={k}>{f.label}</option>)}
+                    </select>
+                </label>
+                <span className="text-gray-400">↔</span>
+                <label className="flex items-center gap-2">
+                    Right
+                    <select value={rightField} onChange={e => setRightField(e.target.value)}
+                        className="border border-gray-300 rounded-md px-2 py-1 bg-white">
+                            {Object.entries(FIELDS).map(([k, f]) => <option key={k} value={k}>{f.label}</option>)}
+                    </select>
+                </label>
+
+            </div>
+
+            {leftField === rightField ? (
+                <p className="text-sm text-gray-500 mt-2">
+                    Pick two different fields to see connections.
+                </p>
+            ) : (
+                <Plot
+                    data={[
+                        {type: "scatter", mode: "lines", x: edgeX, y: edgeY,
+                            line: {color: "#cbd5e1", width: 1}, hoverinfo: "none"},
+                        {type: "scatter", mode: "markers" + (isMobile ? "" : "+text"),
+                            x: leftList.map(n => leftPos[n][0]), y: leftList.map(n => leftPos[n][1]),
+                            text: leftList.map(short), customdata: leftList.map(n => leftDegree[n]),
+                            textposition: "middle left", textfont: {size: 10},
+                            marker: {size: leftList.map(n => 10 + leftDegree[n] * 3), color: "#1e3a8a"},
+                            hovertemplate: "%{text}<br>Connections:%{customdata}<extra></extra>"
+                        },
+                        {type: "scatter", mode: "markers" + (isMobile ? "" : "+text"),
+                            x: rightList.map(n => rightPos[n][0]), y: rightList.map(n => rightPos[n][1]),
+                            text: rightList.map(short), customdata: rightList.map(n => rightDegree[n]),
+                            textposition: "middle right", textfont: {size: 10},
+                            marker: {size: rightList.map(n => 8 + rightDegree[n] * 3), color: "#60a5fa"},
+                            hovertemplate: "%{text}<br>Connections:%{customdata}<extra></extra>"
+                        }
+                    ]}
+                    layout={{
+                        title: {text: `${FIELDS[leftField].label} ↔ ${FIELDS[rightField].label}` },
+                        showlegend: false, hovermode: "closest",
+                        xaxis: {visible: false, range: [-0.8, 1.8]},
+                        yaxis: {visible: false},
+                        margin: {l: 20, r: 20, t: 50, b: 20},
+                    }}
+                    useResizeHandler
+                    style={{width: "100%", height: isMobile ? "400px" : "650px", minWidth: isMobile ? "0px" : "600px"}}
+                />
+            )
+            }
+
             <Plot
                 data={[{type:"bar", orientation: "h", x: valsJurisdictions, y: keysJurisdictions,
                     hovertemplate: "%{y}<br>Implementations: %{x}<extra></extra>",
