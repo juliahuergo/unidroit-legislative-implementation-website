@@ -322,7 +322,7 @@ function App() {
               onClick={() => setActiveTab("results")}
               className={"px-4 py-2 rounded-t-md " +
                 (activeTab === "results"
-                  ? "border border-b-0 border-slate-300 -mb-px bg-white"
+                  ? "border border-b-0 border-slate-300 -mb-px bg-slate-150"
                   : "border border-transparent text-slate-500"
                 )
               }
@@ -333,7 +333,7 @@ function App() {
               onClick={() => setActiveTab("visualizations")}
               className={"px-4 py-2 rounded-t-md " +
                 (activeTab === "visualizations"
-                  ? "border border-b-0 border-slate-300 -mb-px bg-white"
+                  ? "border border-b-0 border-slate-300 -mb-px bg-slate-150"
                   : "border border-transparent text-slate-500"
                 )
               }
