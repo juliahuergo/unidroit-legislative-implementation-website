@@ -25,7 +25,7 @@ function Charts({data}) {
 
     const FIELDS = {
         instrument:   { label: "Instrument",        get: r => r.principle_title },
-        principle:    { label: "Principle/Article", get: r => r.subtitle },
+        principle:    { label: "Provision", get: r => r.subtitle },
         text:         { label: "Legislative text",  get: r => r.text_title },
         jurisdiction: { label: "Jurisdiction",      get: r => r.jurisdiction },
     }
@@ -227,11 +227,11 @@ function Charts({data}) {
                         showscale: false
                     }
                 }]}
-                layout={{title: {text: isMobile ? "Principles/Articles <br> v. implementations"
-                                                : "Most implemented Unidroit principles/articles"},
+                layout={{title: {text: isMobile ? "Provisions <br> v. implementations"
+                                                : "Most implemented Unidroit provisions"},
                         xaxis: {title: {text: isMobile ? "Nº of implementations"
                                                         : "Number of implementations"}},
-                        yaxis: {title: {text: "Principle/Article", standoff: 20}, 
+                        yaxis: {title: {text: "Provision", standoff: 20}, 
                                 categoryorder: "total ascending", 
                                 automargin: true,
                                 showticklabels: !isMobile
@@ -243,7 +243,7 @@ function Charts({data}) {
 
             {isMobile && (
                 <p className="text-xs text-gray-400 italic text-center mb-4">
-                    Tap a bar to see the Unidroit principle/article
+                    Tap a bar to see the Unidroit provision
                 </p>
             )}
 

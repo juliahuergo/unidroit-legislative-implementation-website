@@ -76,7 +76,7 @@ function ResultCard({group}){
 
       <p className="text-xs text-slate-500 mt-1">
         Implements {group.implementations.length} {" "}
-        {group.implementations.length === 1 ? "principle/article" : "principles/articles"} across {" "}
+        {group.implementations.length === 1 ? "provision" : "provisions"} across {" "}
         {byInstrument.length} {" "}
         {byInstrument.length === 1 ? "instrument" : "instruments"} 
       </p>
@@ -87,7 +87,7 @@ function ResultCard({group}){
           <p className="font-semibold">{instrument.principle_title}</p>
           {instrument.connections.map(conn => (
             <div key={conn.id} className="mt-4 border-l-2 border-slate-200 pl-3">
-              <p>{conn.subtitle} (Principle {conn["num principle/article"]})</p>
+              <p>{conn.subtitle} (Provision {conn["num principle/article"]})</p>
               <Field label="Sections" value={conn.sections}/>
               <Field label="Summary" value={conn.summary}/>
               <Field label="Notes" value={conn.notes}/>
@@ -281,7 +281,7 @@ function App() {
           <MultiSelect options={all_jurisdictions} value={jurisdictions} setter={setJurisdictions} label="Jurisdiction"/>
           <MultiSelect options={all_texts} value={texts} setter={setTexts} label="Legislative text"/>
           <MultiSelect options={all_instruments} value={instruments} setter={setInstruments} label="Unidroit instrument"/>
-          <MultiSelect options={all_principles} value={principles} setter={setPrinciples} label="Principle/Article"/>
+          <MultiSelect options={all_principles} value={principles} setter={setPrinciples} label="Provision"/>
 
           <CheckBoxGroup options={all_statuses} value={statuses} setter={setStatuses} label="Status"/>
           <CheckBoxGroup options={all_languages} value={languages} setter={setLanguages} label="Language"/>
@@ -313,7 +313,7 @@ function App() {
             type="search"
             value={searched}
             onChange={e => setSearched(e.target.value)}
-            placeholder="Search by jurisdiction, legislative text, UNIDROIT principle..."
+            placeholder="Search by jurisdiction, legislative text, UNIDROIT provision..."
             className="w-full mb-6 px-4 py-2 border border-slate-300 rounded-md focus:outline-none focus:ring-2 focus:ring-accent"
           />
 
