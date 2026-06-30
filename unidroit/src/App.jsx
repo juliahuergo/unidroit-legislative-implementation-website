@@ -56,7 +56,7 @@ function ResultCard({group}){
   const STATUS_COLOURS = {
     Ongoing: "bg-slate-100 text-slate-800",
     Enacted: "bg-amber-100 text-amber-800",
-    Commenced: "bg-emerald-100 text-emerald-800"
+    "In force": "bg-emerald-100 text-emerald-800"
   }
 
   const byInstrument = Object.values(
