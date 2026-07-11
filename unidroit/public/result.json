@@ -1,7 +1,7 @@
 [
   {
     "id":1,
-    "text_id":1,
+    "text_id":1.0,
     "principle_id":2.0,
     "sections":"Article 12. Section 12.105",
     "summary":null,
@@ -25,7 +25,7 @@
   },
   {
     "id":2,
-    "text_id":1,
+    "text_id":1.0,
     "principle_id":3.0,
     "sections":"Article 12. Section 12.105(d)",
     "summary":null,
@@ -49,7 +49,7 @@
   },
   {
     "id":3,
-    "text_id":2,
+    "text_id":2.0,
     "principle_id":2.0,
     "sections":"Article 10",
     "summary":null,
@@ -73,7 +73,7 @@
   },
   {
     "id":4,
-    "text_id":3,
+    "text_id":3.0,
     "principle_id":2.0,
     "sections":"Article 5(4)",
     "summary":null,
@@ -97,7 +97,7 @@
   },
   {
     "id":5,
-    "text_id":3,
+    "text_id":3.0,
     "principle_id":4.0,
     "sections":"Article 17",
     "summary":null,
@@ -121,7 +121,7 @@
   },
   {
     "id":6,
-    "text_id":4,
+    "text_id":4.0,
     "principle_id":1.0,
     "sections":"Section 2",
     "summary":null,
@@ -145,7 +145,7 @@
   },
   {
     "id":7,
-    "text_id":4,
+    "text_id":4.0,
     "principle_id":2.0,
     "sections":"Section 5",
     "summary":null,
@@ -169,7 +169,7 @@
   },
   {
     "id":8,
-    "text_id":4,
+    "text_id":4.0,
     "principle_id":3.0,
     "sections":"Section 3",
     "summary":null,
@@ -193,7 +193,7 @@
   },
   {
     "id":9,
-    "text_id":4,
+    "text_id":4.0,
     "principle_id":4.0,
     "sections":"Section 4",
     "summary":null,
@@ -217,7 +217,7 @@
   },
   {
     "id":10,
-    "text_id":5,
+    "text_id":5.0,
     "principle_id":5.0,
     "sections":"Article 5",
     "summary":null,
@@ -241,7 +241,7 @@
   },
   {
     "id":11,
-    "text_id":5,
+    "text_id":5.0,
     "principle_id":6.0,
     "sections":"Article 9",
     "summary":null,
@@ -265,7 +265,7 @@
   },
   {
     "id":12,
-    "text_id":5,
+    "text_id":5.0,
     "principle_id":7.0,
     "sections":"Article 15",
     "summary":null,
@@ -289,7 +289,7 @@
   },
   {
     "id":13,
-    "text_id":5,
+    "text_id":5.0,
     "principle_id":8.0,
     "sections":"Article 23",
     "summary":null,
@@ -313,7 +313,7 @@
   },
   {
     "id":14,
-    "text_id":5,
+    "text_id":5.0,
     "principle_id":9.0,
     "sections":"Article 23(3)",
     "summary":null,
@@ -337,7 +337,7 @@
   },
   {
     "id":15,
-    "text_id":5,
+    "text_id":5.0,
     "principle_id":10.0,
     "sections":"Article 24",
     "summary":null,
@@ -361,7 +361,7 @@
   },
   {
     "id":16,
-    "text_id":5,
+    "text_id":5.0,
     "principle_id":11.0,
     "sections":"Article 15",
     "summary":null,
@@ -385,7 +385,7 @@
   },
   {
     "id":17,
-    "text_id":6,
+    "text_id":6.0,
     "principle_id":12.0,
     "sections":"Article 758¹",
     "summary":null,
@@ -409,7 +409,7 @@
   },
   {
     "id":18,
-    "text_id":6,
+    "text_id":6.0,
     "principle_id":7.0,
     "sections":"Article 758²",
     "summary":null,
@@ -433,7 +433,7 @@
   },
   {
     "id":19,
-    "text_id":6,
+    "text_id":6.0,
     "principle_id":13.0,
     "sections":"Article 751",
     "summary":null,
@@ -457,7 +457,7 @@
   },
   {
     "id":20,
-    "text_id":6,
+    "text_id":6.0,
     "principle_id":14.0,
     "sections":"Article 749",
     "summary":null,
@@ -481,7 +481,7 @@
   },
   {
     "id":21,
-    "text_id":6,
+    "text_id":6.0,
     "principle_id":15.0,
     "sections":"Article 749",
     "summary":null,
@@ -505,7 +505,7 @@
   },
   {
     "id":22,
-    "text_id":6,
+    "text_id":6.0,
     "principle_id":6.0,
     "sections":"Article 753",
     "summary":null,
@@ -529,7 +529,7 @@
   },
   {
     "id":23,
-    "text_id":6,
+    "text_id":6.0,
     "principle_id":8.0,
     "sections":"Article 757",
     "summary":null,
@@ -553,7 +553,7 @@
   },
   {
     "id":24,
-    "text_id":6,
+    "text_id":6.0,
     "principle_id":9.0,
     "sections":"Article 757",
     "summary":null,
@@ -577,7 +577,7 @@
   },
   {
     "id":25,
-    "text_id":6,
+    "text_id":6.0,
     "principle_id":16.0,
     "sections":"Article 758",
     "summary":null,
@@ -601,7 +601,7 @@
   },
   {
     "id":26,
-    "text_id":7,
+    "text_id":7.0,
     "principle_id":17.0,
     "sections":"Article 4(4)",
     "summary":null,
@@ -625,7 +625,7 @@
   },
   {
     "id":27,
-    "text_id":7,
+    "text_id":7.0,
     "principle_id":6.0,
     "sections":"Article 5(2)",
     "summary":null,
@@ -649,7 +649,7 @@
   },
   {
     "id":28,
-    "text_id":7,
+    "text_id":7.0,
     "principle_id":18.0,
     "sections":"Article 6",
     "summary":null,
@@ -673,7 +673,7 @@
   },
   {
     "id":29,
-    "text_id":7,
+    "text_id":7.0,
     "principle_id":12.0,
     "sections":"Article 7(2)",
     "summary":null,
@@ -697,7 +697,7 @@
   },
   {
     "id":30,
-    "text_id":7,
+    "text_id":7.0,
     "principle_id":7.0,
     "sections":"Article 8",
     "summary":null,
@@ -721,7 +721,7 @@
   },
   {
     "id":31,
-    "text_id":7,
+    "text_id":7.0,
     "principle_id":19.0,
     "sections":"Article 10",
     "summary":null,
@@ -745,7 +745,7 @@
   },
   {
     "id":32,
-    "text_id":7,
+    "text_id":7.0,
     "principle_id":20.0,
     "sections":"Article 11",
     "summary":null,
@@ -769,7 +769,7 @@
   },
   {
     "id":33,
-    "text_id":7,
+    "text_id":7.0,
     "principle_id":21.0,
     "sections":"Article 13",
     "summary":null,
@@ -793,7 +793,7 @@
   },
   {
     "id":34,
-    "text_id":7,
+    "text_id":7.0,
     "principle_id":22.0,
     "sections":"Article 14",
     "summary":null,
@@ -817,7 +817,7 @@
   },
   {
     "id":35,
-    "text_id":7,
+    "text_id":7.0,
     "principle_id":9.0,
     "sections":"Article 17",
     "summary":null,
